@@ -31,6 +31,8 @@ for (var i = 365; i >= 0; i--) {
 }
 
 //need to filter unique
-year.map(function(run) {
-  return run.date;
-})
+var dates = year.map(function(run) {
+  return moment(run.date).format("YYYY-MM-DD");
+});
+
+window.dates = dates;
