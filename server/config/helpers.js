@@ -3,11 +3,11 @@ import jwt from 'jwt-simple';
 export default {
 
   // Get user from db and return a promise with access to that user
-  applyToUser: function (user) {
+  applyToUser(user) {
     if ((typeof user) === 'string') {
-      user = {username: user};
+      user = { username: user };
     }
-    return findUser({username: username})
+    return findUser({ username: username })
     .then(function (user) {
       if (!user) {
         next(new Error('User does not exist'));
@@ -18,18 +18,18 @@ export default {
   },
 
   // Log errors when appropriate
-  errorLogger: function (error, req, res, next) {
+  errorLogger(error, req, res, next) {
     console.error(error.stack);
     next(error);
   },
-  errorHandler: function (error, req, res, next) {
-    res.send(500, {error: error.message});
+  errorHandler(error, req, res, next) {
+    res.send(500, { error: error.message });
   },
 
   // Used for authentication
-  decode: function (req, res, next) {
-    var token = req.headers['x-access-token'];
-    var user;
+  decode(req, res, next) {
+    const token = req.headers['x-access-token'];
+    let user;
 
     if (!token) {
       return res.send(403); // send forbidden if a token is not provided
