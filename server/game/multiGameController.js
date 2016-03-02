@@ -17,7 +17,7 @@ export default {
         res.send(201, game);
       } else {
         createGame({
-          id: id,
+          id,
         })
         .then((newGame) => {
           console.log(newGame);
@@ -29,7 +29,7 @@ export default {
 
   // Retrieve game instance from database
   getGame(gameId, res, next) {
-    findGame({id: gameId}).then((game) => {
+    findGame({ id: gameId }).then((game) => {
       res.send(201, game);
     });
   },
@@ -38,9 +38,9 @@ export default {
   updateGame(req, res, next) {
     const id = req.body.id;
     const field = req.body.field;
-    const updateQuery = {$set: {}};
+    const updateQuery = { $set: {} };
     updateQuery.$set[field] = true;
-    updateGame({ id: id }, updateQuery).then((game) => {
+    updateGame({ id }, updateQuery).then((game) => {
       res.send(201, game);
     });
   },
@@ -48,7 +48,7 @@ export default {
   // Remove specified game instance from database
   removeGame(req, res, next) {
     const id = req.body.id;
-    removeGame({ id: id }).then((game) => {
+    removeGame({ id }).then((game) => {
       res.send(201, game);
     });
   },

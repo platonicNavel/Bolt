@@ -54,22 +54,22 @@ export default {
     const password = req.body.password;
 
     // check to see if user already exists
-    findUser({ username: username })
+    findUser({ username })
     .then((user) => {
       if (user) {
         next(new Error('User already exist!'));
       } else {
         // make a new user if not one
         return createUser({
-          username: username,
-          password: password,
+          username,
+          password,
         });
       }
     })
     .then((user) => {
       // create token to send back for auth
       const token = jwt.encode(user, 'secret');
-      res.json({ token: token });
+      res.json({ token });
     })
     .fail((error) => {
       next(error);
@@ -82,11 +82,11 @@ export default {
     const newData = req.body.newInfo;
     const username = req.body.user.username;
     const user = {
-      username: username,
+      username,
     };
 
     // search the DB for the specific user
-    const queryCondition = { username: username };
+    const queryCondition = { username };
 
     findUser(user)
     .then((user) => {
