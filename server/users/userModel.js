@@ -1,41 +1,41 @@
 import Q from 'q';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt-nodejs';
-var SALT_WORK_FACTOR = 10;
+const SALT_WORK_FACTOR = 10;
 
 
-var UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   salt: String,
   firstName: {
     type: String,
-    default: 'Speedee'
+    default: 'Speedee',
   },
   lastName: {
     type: String,
-    default: 'Gonzales'
+    default: 'Gonzales',
   },
   email: String,
   phone: Number,
   preferredDistance: {
     type: Number,
-    default: 1
+    default: 1,
   },
   mileSpeed: {
     type: Number,  // in min/mile
-    default: 10
+    default: 10,
   },
   runs: {
     type: Array,
-    default: []
+    default: [],
   },
 
   personalBest: Number, // Personal best in min/mile
@@ -46,15 +46,15 @@ var UserSchema = new mongoose.Schema({
       Silver: 0,
       Bronze: 0,
       'High Five': 0,
-      Iron: 0 //experimental
-    }
-  }
+      Iron: 0, // experimental
+    },
+  },
 });
 
-UserSchema.methods.comparePasswords = function (candidatePassword) {
-  var savedPassword = this.password;
-  return Q.Promise(function (resolve, reject) {
-    bcrypt.compare(candidatePassword, savedPassword, function (err, isMatch) {
+UserSchema.methods.comparePasswords = (candidatePassword) => {
+  const savedPassword = this.password;
+  return Q.Promise((resolve, reject) => {
+    bcrypt.compare(candidatePassword, savedPassword, (err, isMatch) => {
       if (err) {
         reject(err);
       } else {
@@ -64,8 +64,8 @@ UserSchema.methods.comparePasswords = function (candidatePassword) {
   });
 };
 
-UserSchema.pre('save', function (next) {
-  var user = this;
+UserSchema.pre('save', (next) => {
+  const user = this;
 
   // only hash the password if it has been modified (or is new)
   if (!user.isModified('password')) {
@@ -73,13 +73,13 @@ UserSchema.pre('save', function (next) {
   }
 
   // generate a salt
-  bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
+  bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
     if (err) {
       return next(err);
     }
 
     // hash the password along with our new salt
-    bcrypt.hash(user.password, salt, null, function (err, hash) {
+    bcrypt.hash(user.password, salt, null, (err, hash) => {
       if (err) {
         return next(err);
       }
