@@ -8,9 +8,9 @@ export default {
       user = { username: user };
     }
     return findUser({ username: username })
-    .then(function (user) {
-      if (!user) {
-        next(new Error('User does not exist'));
+    .then((userData) => {
+      if (!userData) {
+        console.error('User does not exist');
       } else {
         return user;
       }
@@ -42,5 +42,5 @@ export default {
     } catch (error) {
       return next(error);
     }
-  }
+  },
 };

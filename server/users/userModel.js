@@ -1,6 +1,6 @@
-import Q from 'q';
-import mongoose from 'mongoose';
-import bcrypt from 'bcrypt-nodejs';
+const Q = require('q');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt-nodejs');
 const SALT_WORK_FACTOR = 10;
 
 
@@ -51,7 +51,7 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-UserSchema.methods.comparePasswords = (candidatePassword) => {
+UserSchema.methods.comparePasswords = function(candidatePassword) {
   const savedPassword = this.password;
   return Q.Promise((resolve, reject) => {
     bcrypt.compare(candidatePassword, savedPassword, (err, isMatch) => {
@@ -64,9 +64,8 @@ UserSchema.methods.comparePasswords = (candidatePassword) => {
   });
 };
 
-UserSchema.pre('save', (next) => {
-  const user = this;
-
+UserSchema.pre('save', function(next) {
+  let user = this;
   // only hash the password if it has been modified (or is new)
   if (!user.isModified('password')) {
     return next();
