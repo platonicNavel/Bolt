@@ -1,5 +1,5 @@
-var morgan = require('morgan');
-var bodyParser = require('body-parser');
+import morgan from 'morgan';
+import bodyParser from 'body-parser';
 
 module.exports = function (app, express) {
   app.use(morgan('dev'));

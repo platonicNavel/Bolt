@@ -1,6 +1,6 @@
-var Game = require('./gameModel');
-var Q = require('q');
-var helpers = require('../config/helpers');
+import Game from './gameModel';
+import Q from 'q';
+import helpers from '../config/helpers';
 
 
 var findGame = Q.nbind(Game.findOne, Game);

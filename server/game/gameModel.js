@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // Inside our DB, a game consists of two users, and a flag indicating that
 // the game is currently going on

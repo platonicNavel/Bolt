@@ -1,5 +1,5 @@
-var express = require('express');
-var mongoose = require('mongoose');
+import express from 'express';
+import mongoose from 'mongoose';
 
 var app = express();
 // ========================================

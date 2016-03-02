@@ -1,6 +1,6 @@
-var userController = require('../users/userController.js');
-var gameController = require('../game/multiGameController');
-var helpers = require('./helpers.js'); // our custom middleware
+import userController from '../users/userController.js';
+import gameController from '../game/multiGameController';
+import helpers from './helpers.js'; // our custom middleware
 
 module.exports = function (app, express) {
   app.get('/api/users/profile', userController.getUser);

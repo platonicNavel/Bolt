@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 // Define mongo schema
 var MultiGameSchema = new mongoose.Schema({
   user1: Object,

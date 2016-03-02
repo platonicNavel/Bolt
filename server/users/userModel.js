@@ -1,6 +1,6 @@
-var Q = require('q');
-var mongoose = require('mongoose');
-var bcrypt = require('bcrypt-nodejs');
+import Q from 'q';
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt-nodejs';
 var SALT_WORK_FACTOR = 10;
 
 

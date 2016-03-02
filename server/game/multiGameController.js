@@ -1,6 +1,6 @@
-var Game = require('./multiGameModel');
-var Q = require('q');
-var helpers = require('../config/helpers');
+import Game from './multiGameModel';
+import Q from 'q';
+import helpers from '../config/helpers';
 
 // Define promisified versions of mongoose methods
 var findGame = Q.nbind(Game.findOne, Game);
