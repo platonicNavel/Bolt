@@ -2,7 +2,7 @@ import userController from '../users/userController.js';
 import gameController from '../game/multiGameController';
 import helpers from './helpers.js'; // our custom middleware
 
-module.exports = function (app, express) {
+export default (app, express) => {
   app.get('/api/users/profile', userController.getUser);
   app.get('/api/users/signedin', userController.checkAuth);
 

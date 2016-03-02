@@ -31,4 +31,4 @@ var MultiGameSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('multiGame', MultiGameSchema);
+export default mongoose.model('multiGame', MultiGameSchema);

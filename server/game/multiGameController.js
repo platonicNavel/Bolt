@@ -8,7 +8,7 @@ var createGame = Q.nbind(Game.create, Game);
 var updateGame = Q.nbind(Game.update, Game);
 var removeGame = Q.nbind(Game.remove, Game);
 
-module.exports = {
+export default {
   // Check whether game is in database, if not then create game
   makeGame: function (req, res, next) {
     var id = req.body.id;

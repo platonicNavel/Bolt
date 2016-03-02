@@ -8,7 +8,7 @@ var findUser = Q.nbind(User.findOne, User);
 var createUser = Q.nbind(User.create, User);
 var updateUserDB = Q.nbind(User.update, User);
 
-module.exports = {
+export default {
 
   // Sign a user in
   signin: function (req, res, next) {

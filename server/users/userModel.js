@@ -17,11 +17,11 @@ var UserSchema = new mongoose.Schema({
   salt: String,
   firstName: {
     type: String,
-    default: "Speedee"
+    default: 'Speedee'
   },
   lastName: {
     type: String,
-    default: "Gonzales"
+    default: 'Gonzales'
   },
   email: String,
   phone: Number,
@@ -92,4 +92,4 @@ UserSchema.pre('save', function (next) {
   });
 });
 
-module.exports = mongoose.model('users', UserSchema);
+export default mongoose.model('users', UserSchema);

@@ -1,6 +1,6 @@
 import jwt from 'jwt-simple';
 
-module.exports = {
+export default {
 
   // Get user from db and return a promise with access to that user
   applyToUser: function (user) {

@@ -9,4 +9,4 @@ var GameSchema = new mongoose.Schema({
   active: Boolean
 });
 
-module.exports = mongoose.model('game', GameSchema);
+export default mongoose.model('game', GameSchema);

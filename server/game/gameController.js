@@ -7,7 +7,7 @@ var findGame = Q.nbind(Game.findOne, Game);
 var createGame = Q.nbind(Game.create, Game);
 
 
-module.exports = {
+export default {
   // Create new multiplayer match
   makeGame: function (req, res, next) {
     var user1 = req.body.user1;
