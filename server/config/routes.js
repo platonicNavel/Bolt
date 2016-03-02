@@ -10,13 +10,13 @@ export default (app, express) => {
 
   // Route to obtain specified multiplayer game instance
   app.route('/api/games/:game_id')
-  .get(function (req, res) {
+  .get((req, res) => {
     gameController.getGame(req.params.game_id, res);
   });
 
   // Route to create new multiplayer game instances
   app.route('api/games/:game_id')
-  .post(function (req, res) {
+  .post((req, res) => {
     gameController.cancelGame(req.params.game_id, res);
   });
 
