@@ -1,8 +1,8 @@
-var userController = require('../users/userController.js');
-var gameController = require('../game/multiGameController');
-var helpers = require('./helpers.js'); // our custom middleware
+import userController from '../users/userController.js';
+import gameController from '../game/multiGameController';
+import helpers from './helpers.js'; // our custom middleware
 
-module.exports = function (app, express) {
+export default (app, express) => {
   app.get('/api/users/profile', userController.getUser);
   app.get('/api/users/signedin', userController.checkAuth);
 
@@ -10,13 +10,13 @@ module.exports = function (app, express) {
 
   // Route to obtain specified multiplayer game instance
   app.route('/api/games/:game_id')
-  .get(function (req, res) {
+  .get((req, res) => {
     gameController.getGame(req.params.game_id, res);
   });
 
   // Route to create new multiplayer game instances
   app.route('api/games/:game_id')
-  .post(function (req, res) {
+  .post((req, res) => {
     gameController.cancelGame(req.params.game_id, res);
   });
 
