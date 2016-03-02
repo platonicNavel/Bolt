@@ -6,7 +6,8 @@
   "main": "server/server.js",
   "scripts": {
     "test": "karma start karma.conf.js",
-    "start": "nodemon server/server.js",
+    "babel-node": "./node_modules/.bin/babel-node",
+    "start": "./node_modules/.bin/nodemon --exec npm run babel-node server/server.js",
     "lint": "jscs ./",
     "postinstall": "./node_modules/bower/bin/bower install"
   },
@@ -50,7 +51,7 @@
     "karma-sinon": "^1.0.4",
     "karma-unicorn-reporter": "^0.1.4",
     "mocha": "^2.3.4",
-    "nodemon": "^1.9.0",
+    "nodemon": "^1.9.1",
     "pre-commit": "^1.1.1",
     "sinon": "^1.17.2"
   },
