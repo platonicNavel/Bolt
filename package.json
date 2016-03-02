@@ -8,16 +8,18 @@
     "test": "karma start karma.conf.js",
     "babel-node": "./node_modules/.bin/babel-node",
     "start": "./node_modules/.bin/nodemon --exec npm run babel-node server/server.js",
-    "lint": "jscs ./",
     "postinstall": "./node_modules/bower/bin/bower install"
   },
   "contributors": [
     "Shane McGraw",
     "Elliot Plant",
     "Kyle Corbelli",
-    "Erick Paepke"
+    "Erick Paepke",
+    "Griffin Michl",
+    "Donghee Lee",
+    "Anthony Salierno",
+    "Jarrett Gliner"
   ],
-  "pre-commit": "lint",
   "repository": {
     "type": "git",
     "url": "http://github.com/hackreactor-labs/sprint.bolt-angular.git"
