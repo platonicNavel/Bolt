@@ -26,7 +26,7 @@ routes(app, express);
 
 // start listening to requests on port 8000
 const port = Number(process.env.PORT || 8000);
-app.listen(port, () => {
+app.listen(port, function () {
   console.log(`server listening on port ${port}`);
 });
 
