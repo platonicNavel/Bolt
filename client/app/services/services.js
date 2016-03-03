@@ -533,7 +533,7 @@ angular.module('bolt.services', [])
       }, 0);
     }
 
-    function getMax(runsArr, distanceOrTime) {
+    function getSingleMax(runsArr, distanceOrTime) {
       return runsArr.reduce(function(acc, curr) {
         return curr[distanceOrTime] > acc ? curr[distanceOrTime] : acc;
       }, 0);
@@ -546,39 +546,79 @@ angular.module('bolt.services', [])
       }, 0);
     }
 
+    function padZeroes(num, minLength) {
+      var string = num.toString();
+      var newString = string;
+      while (newString.length < minLength) {
+        newString = '0' + newString;
+      } 
+      return newString;
+    }
+
+    function secondsToMMSS(seconds) {
+      var minutes = Math.floor(seconds / 60);
+      var remainingSeconds = Math.floor(seconds % 60);
+      return padZeroes(minutes, 2) + ':' + padZeroes(remainingSeconds, 2);
+    }
+
+    function secondsToHHMMSS(seconds) {
+      var hours = Math.floor(seconds / 3600);
+      seconds = seconds % 3600;
+      var minutes = Math.floor(seconds / 60);
+      var remainingSeconds = Math.floor(seconds % 60);
+      return padZeroes(hours, 2) + ':' + padZeroes(minutes, 2) + ':' + padZeroes(remainingSeconds, 2);
+    }
+
+    function roundDistance(distance) {
+      return Math.round(distance * 10) / 10;
+    }
+
+    var totalTimeInSeconds = getTotal(runs, 'actualTime');
+    var totalDistance = getTotal(runs, 'distance');
+    var totalRuns = runs.length;
+
     var total = {};
-    total.distance = getTotal(runs, 'distance');
-    total.runs = runs.length;
-    total.time = getTotal(runs, 'actualTime');
+    total.distance = roundDistance(totalDistance);
+    total.runs = totalRuns;
+    total.time = secondsToHHMMSS(totalTimeInSeconds);
 
     var average = {};
-    average.distance = totals.distance / totals.runs;
-    average.time = totals.time / totals.runs;
-    average.pace = totals.time / totals.distance;
+    average.distance = roundDistance(totalDistance / totalRuns);
+    average.time = secondsToHHMMSS(totalTimeInSeconds / totalRuns);
+    average.pace = secondsToMMSS(totalTimeInSeconds / totalDistance);
 
     var best = {};
-    best.distance = getMax(runs, 'distance');
-    best.time = getMax(runs, 'actualTime');
-    best.pace =  getMaxAverage(runs);
+    best.distance = roundDistance(getSingleMax(runs, 'distance'));
+    best.time = secondsToHHMMSS(getSingleMax(runs, 'actualTime'));
+    best.pace =  secondsToMMSS(getMaxAverage(runs));
 
     var latestSevenRuns = runs.slice(runs.length - 7);
-    
+    var latestSevenTimeInSeconds = getTotal(latestSevenRuns, 'actualTime');
+    var latestSevenDistance = getTotal(latestSevenRuns, 'distance');
+    var latestSevenNumRuns = latestSevenRuns.length;
+    var latestSevenPaceInSeconds = latestSevenTimeInSeconds / latestSevenDistance;
+
+
     var latestSeven = {};
-    latestSeven.distance = getTotal(latestSevenRuns, 'distance');
-    latestSeven.avgDistance = latestSeven.distance / latestSevenRuns.length;
-    latestSeven.pace = getTotal(latestSevenRuns, 'actualTime') / latestSeven.distance;
+    latestSeven.distance = roundDistance(latestSevenDistance);
+    latestSeven.avgDistance = roundDistance(latestSevenDistance / latestSevenNumRuns);
+    latestSeven.pace = secondsToMMSS(latestSevenPaceInSeconds);
 
     var previousSevenRuns = runs.slice(runs.length - 14, runs.length - 7);
-    
+    var previousSevenTimeInSeconds = getTotal(previousSevenRuns, 'actualTime');
+    var previousSevenDistance = getTotal(previousSevenRuns, 'distance');
+    var previousSevenNumRuns = previousSevenRuns.length;
+    var previousSevenPaceInSeconds = previousSevenTimeInSeconds / previousSevenDistance;
+
     var previousSeven = {};
-    previousSeven.distance = getTotal(previousSevenRuns, 'distance');
-    previousSeven.avgDistance = previousSeven.distance / previousSevenRuns.length;
-    previousSeven.pace = getTotal(previousSevenRuns, 'actualTime') / previousSeven.distance;
+    previousSeven.distance = roundDistance(previousSevenDistance);
+    previousSeven.avgDistance = roundDistance(previousSevenDistance / previousSevenNumRuns);
+    previousSeven.pace = secondsToMMSS(previousSevenPaceInSeconds);
 
     var diff = {};
     diff.distance = latestSeven.distance - previousSeven.distance;
     diff.avgDistance = latestSeven.avgDistance - previousSeven.avgDistance;
-    diff.pace = latestSeven.pace - previousSeven.pace;
+    diff.pace = secondsToMMSS(latestSevenPaceInSeconds - previousSevenPaceInSeconds);
 
     return {
       total,
