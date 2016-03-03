@@ -1,10 +1,24 @@
 import userController from '../users/userController.js';
 import gameController from '../game/multiGameController';
+import passport from 'passport';
 import helpers from './helpers.js'; // our custom middleware
+import fb from '../utils/facebook.js'; // fb custom middleware
+import Promise from 'bluebird';
+import express from 'express';
 
 export default (app, express) => {
+  // auth via email
   app.get('/api/users/profile', userController.getUser);
   app.get('/api/users/signedin', userController.checkAuth);
+
+  // auth via facebook
+  new Promise(function(resolve, reject) {
+    fb.fbAuth(function(a,b,c) {
+      console.log(a,b,c);
+    })  
+  });
+  app.get('/auth/facebook', passport.authenticate('facebook'));
+  app.get('/login/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }));
 
   app.post('/api/games', gameController.makeGame);
 
