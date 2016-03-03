@@ -376,17 +376,17 @@ angular.module('bolt.services', [])
     //   return moment(run.date).format("YYYY-MM-DD");
     // });
 
-    var dates = runs.reduce(function(prevObject, currObject) {
-      var date = moment(currObject.date).format("YYYY-MM-DD");
-      var distance = currObject.distance;
-      prevObject.date = distance;
-      return prevObject;
+    var dates = runs.reduce(function(acc, curr) {
+      var date = moment(curr.date).format("YYYY-MM-DD");
+      var distance = curr.distance;
+      acc[date] = distance;
+      return acc;
     }, {});
 
     var width = 960;
     var height = 136;
     var cellSize = 17;
-    var colors = ['#edf8e9','#c7e9c0','#a1d99b','#74c476','#31a354','#006d2c'];
+    var colors = ['#c7e9c0','#a1d99b','#74c476','#31a354','#006d2c'];
 
     var today = new Date();
     var yearAgo = new Date(today - 1000 * 60 * 60 * 24 * 365);
@@ -394,9 +394,14 @@ angular.module('bolt.services', [])
     var percent = d3.format(".1%"),
         format = d3.time.format("%Y-%m-%d");
 
+
+    var values = Object.keys(dates)
+      .map(function(key) { return dates[key] });
+
     var colorScale = d3.scale
       .quantile()
-      .domain([d3.min()])
+      .domain([d3.min(values), d3.max(values)])
+      .range(colors);
 
     // var color = d3.scale.quantize()
     //     .domain([-.05, .05])
@@ -412,7 +417,7 @@ angular.module('bolt.services', [])
 
     var rect = svg.selectAll(".day")
         .data(d3.time.days(yearAgo, today))
-      .enter().append("rect")
+        .enter().append("rect")
         .attr("class", "day")
         .attr("width", cellSize)
         .attr("height", cellSize)
@@ -423,8 +428,8 @@ angular.module('bolt.services', [])
     rect.append("title")
         .text(function(d) { return d; });
 
-    rect.filter(function(d) { return dates.indexOf(d) !== -1; })
-      .style('fill', 'rgb(255, 0, 0)')
+    rect.filter(function(d) { return d in dates; })
+      .style('fill', function(d) { return colorScale(dates[d]) })
 
     // shift switches at end of saturday
     function getLastSaturday(d) {
@@ -517,5 +522,75 @@ angular.module('bolt.services', [])
 
   return {
     createRateGraph,
+  }
+})
+.factory('Statistics', function() {
+  
+  function generateStatistics(runs) {
+    function getTotal(runsArr, distanceOrTime) {
+      return runsArr.reduce(function(acc, curr) {
+        return acc + curr[distanceOrTime];
+      }, 0);
+    }
+
+    function getMax(runsArr, distanceOrTime) {
+      return runsArr.reduce(function(acc, curr) {
+        return curr[distanceOrTime] > acc ? curr[distanceOrTime] : acc;
+      }, 0);
+    }
+
+    function getMaxAverage(runsArr) {
+      return runs.reduce(function(acc, run) {
+        var currentPace = run.actualTime / run.distance;
+        return currentPace < acc ? currentPace : acc;
+      }, 0);
+    }
+
+    var total = {};
+    total.distance = getTotal(runs, 'distance');
+    total.runs = runs.length;
+    total.time = getTotal(runs, 'actualTime');
+
+    var average = {};
+    average.distance = totals.distance / totals.runs;
+    average.time = totals.time / totals.runs;
+    average.pace = totals.time / totals.distance;
+
+    var best = {};
+    best.distance = getMax(runs, 'distance');
+    best.time = getMax(runs, 'actualTime');
+    best.pace =  getMaxAverage(runs);
+
+    var latestSevenRuns = runs.slice(runs.length - 7);
+    
+    var latestSeven = {};
+    latestSeven.distance = getTotal(latestSevenRuns, 'distance');
+    latestSeven.avgDistance = latestSeven.distance / latestSevenRuns.length;
+    latestSeven.pace = getTotal(latestSevenRuns, 'actualTime') / latestSeven.distance;
+
+    var previousSevenRuns = runs.slice(runs.length - 14, runs.length - 7);
+    
+    var previousSeven = {};
+    previousSeven.distance = getTotal(previousSevenRuns, 'distance');
+    previousSeven.avgDistance = previousSeven.distance / previousSevenRuns.length;
+    previousSeven.pace = getTotal(previousSevenRuns, 'actualTime') / previousSeven.distance;
+
+    var diff = {};
+    diff.distance = latestSeven.distance - previousSeven.distance;
+    diff.avgDistance = latestSeven.avgDistance - previousSeven.avgDistance;
+    diff.pace = latestSeven.pace - previousSeven.pace;
+
+    return {
+      total,
+      average,
+      best,
+      latestSeven,
+      previousSeven,
+      diff,
+    }
+  }
+
+  return {
+    generateStatistics,
   }
 })
