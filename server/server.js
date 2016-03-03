@@ -1,5 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import Promise from 'bluebird';
+
+import fb from './utils/facebook.js'; // fb custom middleware
 
 import middleware from './config/middleware.js';
 import routes from './config/routes.js';
@@ -20,6 +23,12 @@ const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017');
 // ========================================
+
+new Promise(function(resolve, reject) {
+  fb.fbAuth(function(a,b,c) {
+    console.log(a,b,c);
+  })
+});
 
 middleware(app, express);
 routes(app, express);

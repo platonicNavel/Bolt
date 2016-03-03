@@ -1,29 +1,30 @@
-import passport from 'passport';
-import Strategy from 'passport-facebook';
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
 import {FACEBOOK_APP_ID, FACEBOOK_APP_SECRET} from './facebookEnv.js';
 import Promise from 'bluebird';
 
-export default {
-  fbAuth(cb) {
-    new Promise(function(resolve, reject) { 
-      passport.use(new Strategy({
-        clientID: FACEBOOK_APP_ID,
-        clientSecret: FACEBOOK_APP_SECRET,
-        callbackURL: 'http://localhost:8000/auth/facebook/callback',
-      },
-      function(accessToken, refreshToken, profile) {
-        if (!accessToken || !refreshToken || !profile) {
-          reject();
-        }
-        resolve(accessToken, refreshToken, profile, cb);
-      }
-      ));
-    })
-    .then(function(accessToken, refreshToken, profile) {
-      cb(accessToken, refreshToken, profile);
-    });
+const fbAuth = (cb) => {
+  passport.use(new FacebookStrategy({
+  clientID: FACEBOOK_APP_ID,
+  clientSecret: FACEBOOK_APP_SECRET,
+  callbackURL: 'http://localhost:8000/auth/facebook/callback',
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    console.log(profile);
+    cb(profile);
   }
+  ));
 };
+
+
+export default {
+  fbAuth: fbAuth,
+  fbAuthRoute: passport.authenticate('facebook', { scope: ['user_friends', 'manage_pages'] }),
+  fbAuthCbRoute: passport.authenticate('facebook', { failureRedirect: '/login' }),
+};
+
+ // auth via facebook
+
 
 // export default {
 //   fbAuth(cb) {
