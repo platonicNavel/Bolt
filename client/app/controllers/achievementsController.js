@@ -1,6 +1,6 @@
 // This controller is tied to achievements.html
 angular.module('achievements.controller', [])
-  .controller('AchievementsController', function ($scope, $window, /*Calendar,*/
+  .controller('AchievementsController', function ($scope, $window, Calendar,
                                                   DummyRuns, RateGraph) {
     var session = $window.localStorage;
     var medals = JSON.parse(session.achievements);
@@ -30,8 +30,8 @@ angular.module('achievements.controller', [])
       .style('width', width + 'px');
     };
 
-    // Calendar.createCalendar(DummyRuns.dummy());
-    RateGraph.createRateGraph(DummyRuns.dummy());
+    Calendar.createCalendar(DummyRuns.dummy());
+    // RateGraph.createRateGraph(DummyRuns.dummy());
 
     setTimeout(function () {
       $scope.incrementCounts();

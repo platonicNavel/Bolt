@@ -372,25 +372,36 @@ angular.module('bolt.services', [])
 
 .factory('Calendar', function() {
   function createCalendar(runs) {
-    var dates = runs.map(function(run) {
-      return moment(run.date).format("YYYY-MM-DD");
-    });
+    // var dates = runs.map(function(run) {
+    //   return moment(run.date).format("YYYY-MM-DD");
+    // });
 
-    var width = 960,
-      height = 136,
-      cellSize = 17; // cell size
+    var dates = runs.reduce(function(prevObject, currObject) {
+      var date = moment(currObject.date).format("YYYY-MM-DD");
+      var distance = currObject.distance;
+      prevObject.date = distance;
+      return prevObject;
+    }, {});
 
-    var today = new Date(); // for testing
-    var yearAgo = new Date(today - 1000*60*60*24*365);
+    var width = 960;
+    var height = 136;
+    var cellSize = 17;
+    var colors = ['#edf8e9','#c7e9c0','#a1d99b','#74c476','#31a354','#006d2c'];
+
+    var today = new Date();
+    var yearAgo = new Date(today - 1000 * 60 * 60 * 24 * 365);
 
     var percent = d3.format(".1%"),
         format = d3.time.format("%Y-%m-%d");
 
-    var color = d3.scale.quantize()
-        .domain([-.05, .05])
-        .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
+    var colorScale = d3.scale
+      .quantile()
+      .domain([d3.min()])
 
-    // we only need one svg if we're only doing the last year
+    // var color = d3.scale.quantize()
+    //     .domain([-.05, .05])
+    //     .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
+
     var svg = d3.select(".calendar")
         .append("svg")
         .attr("width", width)
@@ -499,7 +510,8 @@ angular.module('bolt.services', [])
       .append('svg:circle')
         .attr('cx', function (d, i) { return x(d[0]); })
         .attr('cy', function (d, i) { return y(d[1]); })
-        .attr('r', 8);
+        .attr('r', 8)
+        .style('fill', 'rgba(255, 0, 0, 0.3)');
 
   }
 
