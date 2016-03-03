@@ -1,5 +1,6 @@
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
+
 import {FACEBOOK_APP_ID, FACEBOOK_APP_SECRET} from './facebookEnv.js';
 import Promise from 'bluebird';
 
@@ -8,10 +9,12 @@ const fbAuth = (cb) => {
   clientID: FACEBOOK_APP_ID,
   clientSecret: FACEBOOK_APP_SECRET,
   callbackURL: 'http://localhost:8000/auth/facebook/callback',
+  //profileFields: ['id', 'displayName', 'photos', 'email'],
   },
   function(accessToken, refreshToken, profile, cb) {
-    console.log(profile);
-    cb(profile);
+    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
   }
   ));
 };

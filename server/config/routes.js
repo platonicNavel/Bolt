@@ -14,7 +14,11 @@ export default (app, express) => {
   app.post('/api/games', gameController.makeGame);
 
   app.get('/auth/facebook', fb.fbAuthRoute);
-  app.get('/login/facebook/callback', fb.fbAuthCbRoute);
+  app.get('/auth/facebook/callback', fb.fbAuthCbRoute,
+    function(req, res) {
+      console.log(req, res)
+      res.redirect('/');
+    });
 
   // Route to obtain specified multiplayer game instance
   app.route('/api/games/:game_id')
