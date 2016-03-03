@@ -33,3 +33,6 @@ dist/
 node_modules/
 bower_components/
 client/lib/
+
+# FB Auth
+server/utils/facebookEnv.js
