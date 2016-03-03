@@ -12,18 +12,19 @@ const fbAuth = (cb) => {
   //profileFields: ['id', 'displayName', 'photos', 'email'],
   },
   function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });
+    console.log(profile)
   }
   ));
 };
-
 
 export default {
   fbAuth: fbAuth,
   fbAuthRoute: passport.authenticate('facebook', { scope: ['user_friends', 'manage_pages'] }),
   fbAuthCbRoute: passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    console.log(req, res)
+    res.redirect('/');
+  }
 };
 
  // auth via facebook

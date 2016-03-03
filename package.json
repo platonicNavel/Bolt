@@ -72,6 +72,7 @@
     "morgan": "^1.1.1",
     "nodemon": "^1.9.1",
     "passport": "^0.3.2",
+    "passport-facebook": "^2.1.0",
     "q": "^1.4.1",
     "request": "^2.36.0"
   }
