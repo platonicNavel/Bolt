@@ -24,11 +24,6 @@ const app = express();
 mongoose.connect('mongodb://127.0.0.1:27017');
 // ========================================
 
-new Promise(function(resolve, reject) {
-  fb.fbAuth(function(a,b,c) {
-    console.log(a,b,c);
-  })
-});
 
 middleware(app, express);
 routes(app, express);

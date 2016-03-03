@@ -50,6 +50,7 @@ export default {
   },
 
   signup(req, res, next) {
+    console.log('asdfdsfadfs')
     const username = req.body.username;
     const password = req.body.password;
 

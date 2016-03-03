@@ -14,7 +14,7 @@ export default (app, express) => {
   app.post('/api/games', gameController.makeGame);
 
   app.get('/auth/facebook', fb.fbAuthRoute);
-  app.get('/auth/facebook/callback', fb.fbAuthCbRoute);
+  app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }));
 
   // Route to obtain specified multiplayer game instance
   app.route('/api/games/:game_id')
