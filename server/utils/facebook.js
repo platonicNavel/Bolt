@@ -11,11 +11,14 @@ const fbAuth = () => {
   callbackURL: 'http://localhost:8000/auth/facebook/callback',
   profileFields: ['id', 'displayName', 'photos', 'email'],
   },
-  function(accessToken, refreshToken, profile) {
-    console.log('facebook auth success!', profile);
-    // userController.signin(profile);
+  function(accessToken, refreshToken, profile, cb) {
+    console.log('facebook auth success!');
+    cb(null, profile);
   }
   ));
+  passport.serializeUser(function(user, cb) {
+    cb(null, user);
+  });
 };
 
 export default {
