@@ -323,4 +323,187 @@ angular.module('bolt.services', [])
     isAuth: isAuth,
     signout: signout
   };
-});
+})
+
+.factory('DummyRuns', function() {
+  function dummy() {
+    function Run(date) {
+      var distance = Math.random() * 5; //1 to 5 in miles per hour
+      var time = (distance / (Math.random() * 2 + 4)) * (60 * 60);
+      var obj = {
+        date: date,
+        startLocation: {
+          longitude: null,
+          latitude: null
+        },
+        endLocation: {
+          longitude: null,
+          latitude: null
+        },
+        googleExpectedTime: null,
+        actualTime: time,
+        distance: distance,
+        medalReceived: null,
+        racedAgainst: null
+      };
+      return obj;
+    }
+
+    var runs = [];
+    var today = new Date();
+    var date;
+    var run;
+
+    for (var i = 365; i >= 0; i--) {
+      run = Math.random() > 0.5 ? 1 : 0;
+      if (run) {
+        date = new Date(today - 1000 * 60 * 60 * 24 * i);
+        runs.push(Run(date));
+      }
+    }
+
+    return runs;
+  }
+
+  return {
+    dummy,
+  };
+})
+
+.factory('Calendar', function() {
+  function createCalendar(runs) {
+    var dates = runs.map(function(run) {
+      return moment(run.date).format("YYYY-MM-DD");
+    });
+
+    var width = 960,
+      height = 136,
+      cellSize = 17; // cell size
+
+    var today = new Date(); // for testing
+    var yearAgo = new Date(today - 1000*60*60*24*365);
+
+    var percent = d3.format(".1%"),
+        format = d3.time.format("%Y-%m-%d");
+
+    var color = d3.scale.quantize()
+        .domain([-.05, .05])
+        .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
+
+    // we only need one svg if we're only doing the last year
+    var svg = d3.select(".calendar")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("class", "RdYlGn")
+        .append("g")
+        .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
+
+    var rect = svg.selectAll(".day")
+        .data(d3.time.days(yearAgo, today))
+      .enter().append("rect")
+        .attr("class", "day")
+        .attr("width", cellSize)
+        .attr("height", cellSize)
+        .attr("x", function(d) { return weeksSince(yearAgo, d) * cellSize; })
+        .attr("y", function(d) { return d.getDay() * cellSize; })
+        .datum(format);
+
+    rect.append("title")
+        .text(function(d) { return d; });
+
+    rect.filter(function(d) { return dates.indexOf(d) !== -1; })
+      .style('fill', 'rgb(255, 0, 0)')
+
+    // shift switches at end of saturday
+    function getLastSaturday(d) {
+      var date = new Date(d);
+      var dayOfWeek = date.getDay();
+      var diff = date.getDate() - dayOfWeek - 1;
+      return new Date(date.setDate(diff));
+    }
+
+    function weeksSince(firstDay, currentDay) {
+      var week = 1000 * 60 * 60 * 24 * 7;
+      var d1 = firstDay.getTime();
+      var d2 = currentDay.getTime();
+      var lastSaturday = getLastSaturday(d1);
+      return Math.floor((d2 - lastSaturday) / week);
+    }
+  }
+
+  return {
+    createCalendar,
+  }
+
+})
+.factory('RateGraph', function() {
+  function createRateGraph(runs) {
+    var data = runs.map(function(run) {
+      return [run.actualTime / 60, run.distance];
+    });
+
+    var margin = {
+      top: 20,
+      right:15,
+      bottom: 60,
+      left: 60,
+    };
+
+    var width = 960 - margin.left - margin.right;
+    var height = 500 - margin.top - margin.bottom;
+
+    var x = d3.scale.linear()
+      .domain([0, d3.max(data, function(d) { return d[0]; })])
+      .range([0, width]);
+
+    var y = d3.scale.linear()
+      .domain([0, d3.max(data, function(d) { return d[1]; })])
+      .range([height, 0]);
+
+    var chart = d3.select('.rateGraph')
+      .append('svg:svg')
+      .attr('width', width + margin.right + margin.left)
+      .attr('height', height + margin.top + margin.bottom)
+      .attr('class', 'chart');
+
+    var main = chart.append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+      .attr('width', width)
+      .attr('height', height)
+      .attr('class', 'main');
+
+    var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient('bottom');
+
+    main.append('g')
+      .attr('transform', 'translate(0,' + height + ')')
+      .attr('class', 'main axis date')
+      .call(xAxis);
+
+    var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient('left');
+
+    main.append('g')
+      .attr('transform', 'translate(0, 0)')
+      .attr('class', 'main axis date')
+      .call(yAxis);
+
+    var g = main.append('svg:g');
+
+    g.selectAll('scatter-dots')
+      .data(data)
+      .enter()
+      .append('svg:circle')
+        .attr('cx', function (d, i) { return x(d[0]); })
+        .attr('cy', function (d, i) { return y(d[1]); })
+        .attr('r', 8);
+
+  }
+
+  return {
+    createRateGraph,
+  }
+})

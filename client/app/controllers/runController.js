@@ -80,7 +80,8 @@ angular.module('run.controller', [])
       longitude: $scope.destination.long
     };
     var googleExpectedTime = null;
-    var actualTime = runTime;
+    var timeTuple = runTime.format('mm:ss').split(':');
+    var actualTime = 60 * (+timeTuple[0]) + +timeTuple[1];
 
     var currentRunObject = {
       date: date,
@@ -93,7 +94,8 @@ angular.module('run.controller', [])
         latitude: $scope.destination.lat
       },
       googleExpectedTime: null,
-      actualTime: runTime,
+      distance: $scope.totalDistance,
+      actualTime: actualTime,
       medalReceived: medal,
       racedAgainst: null
     };
