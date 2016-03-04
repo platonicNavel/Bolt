@@ -50,7 +50,7 @@ export default {
   },
 
   signup(req, res, next) {
-    console.log('asdfdsfadfs')
+    console.log('authenticating... hold on.', req.body)
     const username = req.body.username;
     const password = req.body.password;
 
@@ -59,7 +59,11 @@ export default {
     .then((user) => {
       if (user) {
         next(new Error('User already exist!'));
-      } else {
+      }
+      else if (req.body.facebook) {
+        return req.body;
+      }
+      else {
         // make a new user if not one
         return createUser({
           username,

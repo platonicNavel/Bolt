@@ -18,8 +18,8 @@ export default (app, express) => {
   function(req, res) {
     console.log('routed!');
     req.body.facebook = true;
-    userController.signup(req, res);
-    res.redirect('/');
+    // userController.signup(req, res);
+    res.redirect('/#/createProfile');
   });
 
   // Route to obtain specified multiplayer game instance
