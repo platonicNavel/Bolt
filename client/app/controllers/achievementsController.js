@@ -33,7 +33,7 @@ angular.module('achievements.controller', [])
     
     $scope.statistics = Statistics.generateStatistics(DummyRuns.dummy());
     Calendar.createCalendar(DummyRuns.dummy());
-    // RateGraph.createRateGraph(DummyRuns.dummy());
+    RateGraph.createRateGraph(DummyRuns.dummy());
 
     setTimeout(function () {
       $scope.incrementCounts();

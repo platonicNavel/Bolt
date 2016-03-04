@@ -425,6 +425,31 @@ angular.module('bolt.services', [])
         .attr("y", function(d) { return d.getDay() * cellSize; })
         .datum(format);
 
+    var week = ['', 'M', '', 'W', '', 'F', '']
+    var yLabels = svg.selectAll(".wday")
+        .data(week)
+        .enter()
+        .append('text')
+        .attr("x", -cellSize)
+        .attr("y", function(d, i) { return (i + 1) * cellSize; })
+        .text(function(d) { return d; });
+
+    var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+    var months = []
+    var curMonth = yearAgo.getMonth();
+    while (months.length < 12) {
+      months.push(monthNames[curMonth % monthNames.length]);
+      curMonth++;
+    }
+
+    var xLabels = svg.selectAll(".month")
+        .data(months)
+        .enter()
+        .append('text')
+        .attr("x", function(d, i) { return cellSize + cellSize * (52/12) * i; })
+        .attr("y", - cellSize / 3)
+        .text(function(d) {return d; });
+
     rect.append("title")
         .text(function(d) { return d; });
 
@@ -466,8 +491,8 @@ angular.module('bolt.services', [])
       left: 60,
     };
 
-    var width = 960 - margin.left - margin.right;
-    var height = 500 - margin.top - margin.bottom;
+    var width = 600 - margin.left - margin.right;
+    var height = 300 - margin.top - margin.bottom;
 
     var x = d3.scale.linear()
       .domain([0, d3.max(data, function(d) { return d[0]; })])
@@ -556,9 +581,11 @@ angular.module('bolt.services', [])
     }
 
     function secondsToMMSS(seconds) {
+      var prefix = seconds >= 0 ? '' : '-';
+      seconds = Math.abs(seconds);
       var minutes = Math.floor(seconds / 60);
       var remainingSeconds = Math.floor(seconds % 60);
-      return padZeroes(minutes, 2) + ':' + padZeroes(remainingSeconds, 2);
+      return prefix + padZeroes(minutes, 2) + ':' + padZeroes(remainingSeconds, 2);
     }
 
     function secondsToHHMMSS(seconds) {
@@ -616,8 +643,8 @@ angular.module('bolt.services', [])
     previousSeven.pace = secondsToMMSS(previousSevenPaceInSeconds);
 
     var diff = {};
-    diff.distance = latestSeven.distance - previousSeven.distance;
-    diff.avgDistance = latestSeven.avgDistance - previousSeven.avgDistance;
+    diff.distance = roundDistance(latestSeven.distance - previousSeven.distance);
+    diff.avgDistance = roundDistance(latestSeven.avgDistance - previousSeven.avgDistance);
     diff.pace = secondsToMMSS(latestSevenPaceInSeconds - previousSevenPaceInSeconds);
 
     return {
