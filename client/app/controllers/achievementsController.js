@@ -14,6 +14,10 @@ angular.module('achievements.controller', [])
       medals['High Five'].toString()
     ];
 
+    window.addEventListener('resize', function() {
+      Calendar.createCalendar(DummyRuns.dummy());
+    })
+
 
     // Animates display of medal counts
     $scope.incrementCounts = function (width) {
@@ -30,7 +34,7 @@ angular.module('achievements.controller', [])
       .duration(1500)
       .style('width', width + 'px');
     };
-    
+
     $scope.statistics = Statistics.generateStatistics(DummyRuns.dummy());
     Calendar.createCalendar(DummyRuns.dummy());
     RateGraph.createRateGraph(DummyRuns.dummy());

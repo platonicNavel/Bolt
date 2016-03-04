@@ -376,6 +376,15 @@ angular.module('bolt.services', [])
     //   return moment(run.date).format("YYYY-MM-DD");
     // });
 
+    var calendar = document.getElementsByClassName('calendar')[0];
+    if (calendar.childNodes.length) {
+      calendar.removeChild(calendar.childNodes[0]);
+    }
+    // while (calendar.firstChild) {
+    //   calendar.removeChild(calendar.firstChild);
+    // }
+
+
     var dates = runs.reduce(function(acc, curr) {
       var date = moment(curr.date).format("YYYY-MM-DD");
       var distance = curr.distance;
@@ -383,9 +392,10 @@ angular.module('bolt.services', [])
       return acc;
     }, {});
 
-    var width = 960;
-    var height = 136;
-    var cellSize = 17;
+    var marginTop = 10;
+    var width = d3.select('.calendar')[0][0].clientWidth;
+    var height = width * 0.132 - marginTop;
+    var cellSize = height / 8;
     var colors = ['#c7e9c0','#a1d99b','#74c476','#31a354','#006d2c'];
 
     var today = new Date();
@@ -410,10 +420,10 @@ angular.module('bolt.services', [])
     var svg = d3.select(".calendar")
         .append("svg")
         .attr("width", width)
-        .attr("height", height)
+        .attr("height", height + marginTop)
         .attr("class", "RdYlGn")
         .append("g")
-        .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
+        .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height + marginTop - cellSize * 7) + ")");
 
     var rect = svg.selectAll(".day")
         .data(d3.time.days(yearAgo, today))
@@ -430,6 +440,7 @@ angular.module('bolt.services', [])
         .data(week)
         .enter()
         .append('text')
+        .style('font-size', cellSize)
         .attr("x", -cellSize)
         .attr("y", function(d, i) { return (i + 1) * cellSize; })
         .text(function(d) { return d; });
@@ -448,6 +459,7 @@ angular.module('bolt.services', [])
         .append('text')
         .attr("x", function(d, i) { return cellSize + cellSize * (52/12) * i; })
         .attr("y", - cellSize / 3)
+        .attr('font-size', cellSize)
         .text(function(d) {return d; });
 
     rect.append("title")

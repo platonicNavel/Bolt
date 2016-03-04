@@ -125,19 +125,11 @@ body{
 }
 
 .medalContainerOuter {
-  display: block;
-  width: 100%;
-  height: 87vh;
-  margin-top: 5vh;
+  height: 10vh;
 }
 
 .medalContainerInner {
-  display: block;
-  color: white;
   height: 10vh;
-  margin: 0 auto 4vh auto;
-  font-size: 2em;
-  vertical-align: middle;
 }
 
 .icon {
@@ -275,4 +267,21 @@ body{
   fill: #eeeeee;
 }
 
+.primary-header, .secondary-header {
+  margin-bottom: 0;
+}
+
+.primary-header div {
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.secondary-header div {
+  color: gray;
+  font-size: 0.75em;
+}
+
+.first {
+  border-left: 1px solid black;
+}
 
