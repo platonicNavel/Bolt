@@ -16,8 +16,13 @@ export default (app, express) => {
   app.get('/auth/facebook', fb.fbAuthRoute);
   app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/signin' }),
   function(req, res) {
-    console.log('routed!');
-    req.body.facebook = true;
+    req.body = {
+      facebook: true,
+      firstName: res.req.user.name.givenName,
+      lastName: res.req.user.name.familyName,
+      email: res.req.user.emails[0].value,
+    };
+    console.log('routed!', req.body);
     // userController.signup(req, res);
     res.redirect('/#/createProfile');
   });

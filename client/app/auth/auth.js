@@ -54,7 +54,6 @@ angular.module('bolt.auth', [])
     .then(function (token) {
       $window.localStorage.setItem('com.bolt', token);
       $window.localStorage.setItem('facebook', true);
-      $location.path('/createProfile');
     });
   };
 });

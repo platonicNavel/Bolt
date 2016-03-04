@@ -11,6 +11,7 @@ angular.module('bolt.createProfile', ['bolt.auth'])
   $scope.destroyTempToken = function() {
     if ($window.localStorage['facebook']) {
       $window.localStorage.removeItem('facebook');
+      $window.localStorage.removeItem('com.bolt');
     }
   };
 

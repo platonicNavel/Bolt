@@ -9,7 +9,7 @@ const fbAuth = () => {
   clientID: FACEBOOK_APP_ID,
   clientSecret: FACEBOOK_APP_SECRET,
   callbackURL: 'http://localhost:8000/auth/facebook/callback',
-  profileFields: ['id', 'displayName', 'photos', 'email'],
+  profileFields: ['id', 'first_name', 'last_name', 'email', 'picture'],
   },
   function(accessToken, refreshToken, profile, cb) {
     console.log('facebook auth success!');
