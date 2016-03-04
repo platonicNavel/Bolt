@@ -43,6 +43,22 @@ body{
   font-size: 6em;
 }
 
+.btn.fblogin {
+  background-color: #3b5998 !important;
+  display: inline;
+  float: right;
+  position: relative;
+  top: -2.6em;
+}
+
+.fbicon {
+  position: relative;
+  padding: 1px;
+  width: 20px;
+  height: 20px;
+  top: 4px;
+  border: 1px ridge #ffffff;
+}
 
 #botNav {
   position: absolute;
