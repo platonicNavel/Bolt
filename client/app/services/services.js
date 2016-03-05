@@ -50,9 +50,10 @@ angular.module('bolt.services', [])
         destination: backToCurrent,
         waypoints: [{ location: endOfRoute, stopover: false}],
         optimizeWaypoints: true,
-        travelMode: google.maps.TravelMode.WALKING,
+        travelMode: google.maps.TravelMode.DRIVING,
         unitSystem: google.maps.UnitSystem.IMPERIAL,
-        provideRouteAlternatives: true
+        avoidHighways: true,
+        provideRouteAlternatives: false
       }, function (response, status) {
         directionsRenderer.setDirections(response);
         var totalDistance = 0;
