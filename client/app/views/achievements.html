@@ -29,51 +29,65 @@
     <div class="count number"> &nbsp; x &nbsp; <span class="number">0</span></div>
   </div>
 </div>
-<div class="summary-statistics">
-  <div class="row primary-header">
-    <div class="col s1 offset-s2">Totals</div>
-    <div class="col s1 offset-s2 first">Average</div>
-    <div class="col s1 offset-s2 first">Accomplishments</div>
+<div class="row summary">
+  <div class="col l3 offset-l2 s10 offset-s1">
+    <div class="row primary-header">
+      <div class="col s12">Totals</div>
+    </div>
+    <div class="row secondary-header">
+      <div class="col s4">Distance</div>
+      <div class="col s4">Runs</div>
+      <div class="col s4">Run Time</div>
+    </div>
+    <div class="row summay">
+      <div class="col s4">{{ statistics.total.distance }}</div>
+      <div class="col s4">{{ statistics.total.runs }}</div>
+      <div class="col s4">{{ statistics.total.time }}</div>
+    </div>
   </div>
-  <div class="row secondary-header">
-    <div class="col s1 offset-s2">Distance</div>
-    <div class="col s1">Runs</div>
-    <div class="col s1">Run Time</div>
-    <div class="col s1 first">Distance</div>
-    <div class="col s1">Run Time</div>
-    <div class="col s1">Pace</div>
-    <div class="col s1 first">Longest Run</div>
-  <!--   <div class="col s1">Longest Run Time</div>
-   -->  <div class="col s1">Fastest Avg. Pace</div>
+  <div class="col l3 s10 offset-s1">
+    <div class="row primary-header">
+      <div class="col s12">Average</div>
+    </div>
+    <div class="row secondary-header">
+      <div class="col s4">Distance</div>
+      <div class="col s4">Run Time</div>
+      <div class="col s4">Pace</div>
+    </div>
+    <div class="row summary">
+      <div class="col s4">{{ statistics.average.distance }}</div>
+      <div class="col s4">{{ statistics.average.time }}</div>
+      <div class="col s4">{{ statistics.average.pace }}</div>
+    </div>
   </div>
-  <div class="row">
-    <!-- Summary Statistics -->
-    <div class="col s1 offset-s2">{{ statistics.total.distance }}</div>
-    <div class="col s1">{{ statistics.total.runs }}</div>
-    <div class="col s1">{{ statistics.total.time }}</div>
-    <div class="col s1 first">{{ statistics.average.distance }}</div>
-    <div class="col s1">{{ statistics.average.time }}</div>
-    <div class="col s1">{{ statistics.average.pace }}</div>
-    <div class="col s1 first">{{ statistics.best.distance }}</div>
-  <!--   <div class="col s1">{{ statistics.best.time }}</div>
-   -->  <div class="col s1">{{ statistics.average.pace }}</div>
-    <div class="col s1"></div>
+  <div class="col l3 s10 offset-s1">
+    <div class="row primary-header">
+      <div class="col s12">Accomplishments</div>
+    </div>
+    <div class="row secondary-header">
+      <div class="col s4">Longest Run</div>
+      <div class="col s4">Fastest Avg. Pace</div>
+    </div>
+    <div class="row summary">
+      <div class="col s4">{{ statistics.best.distance }}</div>
+      <div class="col s4">{{ statistics.average.pace }}</div>
+    </div>
   </div>
 </div>
 <div class="row calendar-container">
   <!-- Calendar -->
-  <div class="calendar calendar-container col s8 offset-s2"></div>
+  <div class="calendar calendar-container col s10 l8 offset-s1 offset-l2"></div>
 </div>
 
 <div class="row recent-runs">
-  <!-- Recent Runs Table -->
-  <div class="col l3 s10 offset-s2 offset-l2">
+  <!-- Recent Runs Table  -->
+  <div class="col l3 s10 offset-s1 offset-l2">
     <table>
       <thead>
         <tr>
           <th></th>
-          <th data-field="latestSeven">Latest 7</th>
-          <th data-field="previousSeven">Previous 7</th>
+          <th data-field="latestSeven">Latest7</th>
+          <th data-field="previousSeven">Previous7</th>
           <th data-field="diff">Difference</th>
       </thead>
       <tbody>
@@ -100,13 +114,12 @@
   </div>
 
   <!-- Latest Runs and Rate Graph -->
-  <div class="col s10 l5">
-    <br>
+  <div class="col s10 l5 offset-s1">
     <div class="rateGraph"></div>
   </div>
 </div>
 
-<div class="container profile center-align">
+<div class="container profile center-align" style="margin-bottom: 10px">
   <span><a href="#/" class="waves-effect waves-light grey darken-3 btn">Home<a></span>
 </div>
 </div>

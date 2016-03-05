@@ -23,7 +23,7 @@ html, body {
 
 
 body{
-  overflow: hidden;
+  overflow: auto;
 }
 
 .message {
@@ -281,22 +281,19 @@ body{
   font-size: 0.75em;
 }
 
-.first {
-  border-left: 1px solid black;
-}
-
 .axis line, .axis path {
   shape-rendering: crispEdges;
   stroke: black;
   fill: none;
 }
 
-.summary-statistics {
-  height: 10vh;
+.summary {
+  margin-bottom: 0;
 }
 
 .calendar-container {
   height: 20vh;
+  margin-bottom: 0;
 }
 
 .recent-runs {
@@ -320,4 +317,13 @@ rect {
 
 rect.cell-hover {
   stroke: black;
+}
+
+.recent-runs {
+  height: 10vh;
+}
+
+.unit-label {
+  color: gray;
+  font-size: 0.75em;
 }

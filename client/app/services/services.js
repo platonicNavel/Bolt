@@ -328,7 +328,7 @@ angular.module('bolt.services', [])
 .factory('DummyRuns', function() {
   function dummy() {
     function Run(date) {
-      var distance = Math.random() * 5; //1 to 5 in miles per hour
+      var distance = Math.random() * 5 + 1; //1 to 5 in miles per hour
       var time = (distance / (Math.random() * 2 + 4)) * (60 * 60);
       var obj = {
         date: date,
@@ -392,17 +392,29 @@ angular.module('bolt.services', [])
       return acc;
     }, {});
 
+    var visibleWeeks = [];
+    var i = 0;
+    while (visibleWeeks.length < 53) {
+      visibleWeeks.push(i);
+      i++;
+    }
 
     var containingWidth = d3.select('.calendar')[0][0].clientWidth;
-    var marginTop = containingWidth * 0.05;
-    var marginLeft = containingWidth * 0.05;
-    var width = containingWidth - marginLeft;
-    var height = containingWidth * 0.18 - marginTop;
-    var cellSize = height / 8;
-    var colors = ['#c7e9c0','#a1d99b','#74c476','#31a354','#006d2c'];
+    
+    var dateScale = d3.scale.quantize().domain([0, 960]).range(visibleWeeks);
 
     var today = new Date();
-    var yearAgo = new Date(today - 1000 * 60 * 60 * 24 * 365);
+    var numWeeks = dateScale(containingWidth)
+    var yearAgo = new Date(today - 1000 * 60 * 60 * 24 * 7 * numWeeks);
+
+
+    // margin needs to be large enough to contain axis labels
+    var cellSize = containingWidth / numWeeks * 0.9;
+    var marginTop = cellSize;
+    var marginLeft = cellSize / 1.5;
+    var width = containingWidth;
+    var height = cellSize * 7;
+    var colors = ['#c7e9c0','#a1d99b','#74c476','#31a354','#006d2c'];
 
     var percent = d3.format(".1%"),
         format = d3.time.format("%Y-%m-%d");
@@ -480,26 +492,25 @@ angular.module('bolt.services', [])
         .data(week)
         .enter()
         .append('text')
-        .style('font-size', cellSize)
-        .attr("x", -cellSize)
-        .attr("y", function(d, i) { return (i + 1) * cellSize; })
+        .style('font-size', cellSize / 1.5)
+        .attr("x", 0)
+        .attr("y", function(d, i) { return (i + 0.8) * cellSize; })
         .text(function(d) { return d; });
 
     var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     var months = []
     var curMonth = yearAgo.getMonth();
-    while (months.length < 12) {
+    while (months.length < numWeeks/4) {
       months.push(monthNames[curMonth % monthNames.length]);
       curMonth++;
     }
-
     var xLabels = svg.selectAll(".month")
         .data(months)
         .enter()
         .append('text')
-        .attr("x", function(d, i) { return cellSize + cellSize * (52/12) * i; })
+        .attr("x", function(d, i) { return cellSize + cellSize * 4 * i; })
         .attr("y", - cellSize / 3)
-        .attr('font-size', cellSize)
+        .attr('font-size', cellSize / 1.5)
         .text(function(d) {return d; });
 
     rect.append("title")
@@ -541,16 +552,20 @@ angular.module('bolt.services', [])
       rateGraph.removeChild(rateGraph.childNodes[0]);
     }
 
+    var containingWidth = d3.select('.rateGraph')[0][0].clientWidth;
+    var containingHeight = $('.recent-runs div').height();
+
     var margin = {
-      top: 20,
-      right:15,
-      bottom: 60,
-      left: 60,
+      top: 25,
+      right:30,
+      bottom: 55,
+      left: 45,
     };
 
-    var width = d3.select('.rateGraph')[0][0].clientWidth - margin.left - margin.right;
-    var height = d3.select('.rateGraph')[0][0].clientWidth * 0.5 - margin.top - margin.bottom;
-    var radius = d3.select('.rateGraph')[0][0].clientWidth * 0.012; 
+    var width = containingWidth - margin.left - margin.right;
+    var height = containingHeight - margin.top - margin.bottom;
+    var radius = containingWidth * 0.012;
+
 
     var x = d3.scale.linear()
       .domain([0, d3.max(data, function(d) { return d[0]; })])
