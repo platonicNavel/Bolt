@@ -13,10 +13,14 @@ const fbAuth = () => {
   },
   function(accessToken, refreshToken, profile, cb) {
     console.log('facebook auth success!');
+    profile.facebook = true;
     cb(null, profile);
   }
   ));
   passport.serializeUser(function(user, cb) {
+    cb(null, user);
+  });
+  passport.deserializeUser(function(user, cb) {
     cb(null, user);
   });
 };
@@ -24,4 +28,5 @@ const fbAuth = () => {
 export default {
   fbAuth: fbAuth,
   fbAuthRoute: passport.authenticate('facebook', { scope: ['user_friends', 'manage_pages'] }),
+  fbAuthCbRoute: passport.authenticate('facebook', { failureRedirect: '/signin' }),
 };

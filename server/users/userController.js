@@ -50,7 +50,7 @@ export default {
   },
 
   signup(req, res, next) {
-    console.log('authenticating... hold on.', req.body)
+    console.log('authenticating... hold on.', req.user);
     const username = req.body.username;
     const password = req.body.password;
 
@@ -60,8 +60,14 @@ export default {
       if (user) {
         next(new Error('User already exist!'));
       }
-      else if (req.body.facebook) {
-        return req.body;
+      else if (req.user.facebook) {
+        const facebookUser = {
+          facebook: true,
+          firstName: req.user.name.givenName,
+          lastName: req.user.name.familyName,
+          email: req.user.emails[0].value,
+        };
+        console.log('routed!', facebookUser);
       }
       else {
         // make a new user if not one

@@ -14,18 +14,7 @@ export default (app, express) => {
   app.post('/api/games', gameController.makeGame);
 
   app.get('/auth/facebook', fb.fbAuthRoute);
-  app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/signin' }),
-  function(req, res) {
-    req.body = {
-      facebook: true,
-      firstName: res.req.user.name.givenName,
-      lastName: res.req.user.name.familyName,
-      email: res.req.user.emails[0].value,
-    };
-    console.log('routed!', req.body);
-    // userController.signup(req, res);
-    res.redirect('/#/createProfile');
-  });
+  app.get('/auth/facebook/callback', fb.fbAuthCbRoute, userController.signup);
 
   // Route to obtain specified multiplayer game instance
   app.route('/api/games/:game_id')
