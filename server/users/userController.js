@@ -69,7 +69,17 @@ export default {
     .then((user) => {
       // create token to send back for auth
       const token = jwt.encode(user, 'secret');
-      res.json({ token });
+      res.json({
+        token: token,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone,
+        preferredDistance: user.preferredDistance,
+        runs: JSON.stringify(user.runs),
+        achievements: JSON.stringify(user.achievements)
+      });
     })
     .fail((error) => {
       next(error);

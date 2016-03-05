@@ -4,7 +4,7 @@ angular.module('achievements.controller', [])
     var session = $window.localStorage;
     var medals = JSON.parse(session.achievements);
     $scope.total = medals['Gold'] + medals['Silver'] + medals['Bronze'] + medals['High Five'];
-
+    $scope.session = session;
     // Use numeric strings for medal counts to display in d3
     var medalCounts = [
       medals['Gold'].toString(),
