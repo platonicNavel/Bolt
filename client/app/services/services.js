@@ -377,8 +377,8 @@ angular.module('bolt.services', [])
     // });
 
     var calendar = document.getElementsByClassName('calendar')[0];
-    if (calendar.childNodes.length) {
-      calendar.removeChild(calendar.childNodes[0]);
+    while (calendar.childNodes.length) {
+      calendar.removeChild(calendar.childNodes[calendar.childNodes.length - 1]);
     }
     // while (calendar.firstChild) {
     //   calendar.removeChild(calendar.firstChild);
@@ -416,9 +416,13 @@ angular.module('bolt.services', [])
       .domain([d3.min(values), d3.max(values)])
       .range(colors);
 
-    // var color = d3.scale.quantize()
-    //     .domain([-.05, .05])
-    //     .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
+    var tooltip = d3.select('.calendar')
+      .append('div')
+      .attr('id', 'tooltip')
+      .style('position', 'absolute')
+      .style('z-index', '10')
+      .style('visibility', 'hidden')
+      .text('a simple tooltip');
 
     var svg = d3.select(".calendar")
         .append("svg")
@@ -437,6 +441,39 @@ angular.module('bolt.services', [])
         .attr("x", function(d) { return weeksSince(yearAgo, d) * cellSize; })
         .attr("y", function(d) { return d.getDay() * cellSize; })
         .datum(format);
+
+    rect.on('mouseover', mouseover);
+    rect.on('mouseout', mouseout);
+
+    function mouseover(d) {
+      d3.select(this.parentNode.appendChild(this)).classed('cell-hover', true);
+      tooltip.style('visibility', 'visible');
+      var tooltipText;
+      if (!dates[d]) {
+        tooltipText = '<span>No runs on </span>'
+      } else {
+        tooltipText = '<span>' + Math.round(dates[d]*10)/10 + ' miles run </span> on '
+      }
+      tooltipText += d
+
+      tooltip.transition()
+        .duration(200)
+        .style('opacity', .9);
+
+      tooltip.html(tooltipText)
+        .style('left', (d3.event.pageX) + 30 + 'px')
+        .style('top', (d3.event.pageY) + 'px')
+
+    }
+
+    function mouseout(d) {
+      d3.select(this).classed('cell-hover', false);
+      tooltip.transition()
+        .duration(200)
+        .style('opacity', 0);
+      var $tooltip = $("#tooltip");
+      $tooltip.empty();
+    }
 
     var week = ['', 'M', '', 'W', '', 'F', '']
     var yLabels = svg.selectAll(".wday")
@@ -567,6 +604,18 @@ angular.module('bolt.services', [])
         .attr('cy', function (d, i) { return y(d[1]); })
         .attr('r', radius)
         .style('fill', 'rgba(255, 0, 0, 0.3)');
+
+
+    g.append('text')
+      .attr('text-anchor', 'middle')
+      .attr('transform', 'translate(' + (-margin.left/2) + ',' + height /2 + ')rotate(-90)')
+      .text('Miles');
+
+    g.append('text')
+      .attr('text-anchor', 'middle')
+      .attr('transform', 'translate(' + width / 2+ ',' + (height + margin.top + margin.bottom/3) + ')')
+      .text('Minutes')
+
 
   }
 

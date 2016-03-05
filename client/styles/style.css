@@ -302,3 +302,22 @@ body{
 .recent-runs {
   height: 36vh;
 }
+
+#tooltip {
+  background-color: #fff;
+  border: 2px solid #ccc;
+  padding: 10px;
+}
+
+#tooltip span {
+  font-weight: 900;
+}
+
+rect {
+  stroke: white;
+  stroke-width:2px;
+}
+
+rect.cell-hover {
+  stroke: black;
+}
