@@ -75,6 +75,8 @@ export default {
           email: facebookUser.email,
           username: facebookUser.firstName+facebookUser.lastName,
           password: facebookUser.id,
+          firstName: facebookUser.firstName,
+          lastName: facebookUser.lastName,
         });
         // res.redirect('/#/createProfile');
         return user;
