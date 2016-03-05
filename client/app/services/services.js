@@ -21,8 +21,7 @@ angular.module('bolt.services', [])
         console.error(err);
       });
     var makeMap = function (currentLatLngObj, $scope) {
-      var destinationCoordinates = destination ||
-          randomCoordsAlongCircumference(currentLatLngObj, session.preferredDistance);
+      var destinationCoordinates = randomCoordsAlongCircumference(currentLatLngObj, (session.preferredDistance)/2);
       mainMap = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(currentLatLngObj.lat, currentLatLngObj.lng),
         zoom: 13,
@@ -36,17 +35,24 @@ angular.module('bolt.services', [])
         icon: '/assets/bolt.png'
       });
       var startOfRoute = new google.maps.LatLng(currentLocMarker.position.lat(), currentLocMarker.position.lng());
-      var endOfRoute = new google.maps.LatLng(destinationCoordinates.lat, destinationCoordinates.lng);
+    
+      var backToCurrent = new google.maps.LatLng(currentLocMarker.position.lat(), currentLocMarker.position.lng());
+
+      var endOfRoute = new google.maps.LatLng(destinationCoordinates.lat, destinationCoordinates.lng); 
+     
       $scope.destination = {
         lat: endOfRoute.lat(),
         lng: endOfRoute.lng()
       };
+
       route = directionsService.route({
         origin: startOfRoute,
-        destination: endOfRoute,
+        destination: backToCurrent,
+        waypoints: [{ location: endOfRoute, stopover: false}],
+        optimizeWaypoints: true,
         travelMode: google.maps.TravelMode.WALKING,
         unitSystem: google.maps.UnitSystem.IMPERIAL,
-        provideRouteAlternatives: false
+        provideRouteAlternatives: true
       }, function (response, status) {
         directionsRenderer.setDirections(response);
         var totalDistance = 0;
