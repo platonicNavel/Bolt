@@ -67,8 +67,16 @@ export default {
           firstName: req.user.name.givenName,
           lastName: req.user.name.familyName,
           email: req.user.emails[0].value,
+          id: req.user.id,
         };
         console.log('routed!', facebookUser);
+        const user = createUser({
+          email: facebookUser.email,
+          username: facebookUser.firstName+facebookUser.lastName,
+          password: facebookUser.id,
+        });
+        // res.redirect('/#/createProfile');
+        return user;
       }
       else {
         // make a new user if not one
