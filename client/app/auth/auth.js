@@ -50,5 +50,6 @@ angular.module('bolt.auth', [])
 
   $scope.fbsignin = function() {
     $window.location = ('./auth/facebook');
+    $window.localStorage.setItem('facebook', true);
   };
 });

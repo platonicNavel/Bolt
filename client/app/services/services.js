@@ -299,8 +299,7 @@ angular.module('bolt.services', [])
 
   // Checks token and ensures leftover tokens without usernames don't fly
   var isAuth = function () {
-    return (!!$window.localStorage.getItem('com.bolt'))
-        && (!!$window.localStorage.getItem('email') || !!$window.localStorage.getItem('facebook'));
+    return ((!!$window.localStorage.getItem('com.bolt') && (!!$window.localStorage.getItem('email'))) || !!$window.localStorage.getItem('facebook'));
   };
 
   var signout = function () {

@@ -94,7 +94,8 @@ export default {
       const token = jwt.encode(user, 'secret');
       console.log(user.facebook);
       if (user.facebook) {
-        res.redirect('/#/createProfile');
+        res.redirect('/#/createProfile/token='+token);
+        return;
       }
       res.json({ token, email: user.email });
     })
