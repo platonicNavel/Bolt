@@ -281,18 +281,17 @@ body{
   font-size: 0.75em;
 }
 
-.first {
-  border-left: 1px solid black;
-}
-
 .axis line, .axis path {
   shape-rendering: crispEdges;
   stroke: black;
   fill: none;
 }
 
-.summary-statistics {
-  height: 10vh;
+.summary {
+  margin-bottom: 0;
+}
+.summay {
+  margin-bottom: 0;
 }
 
 .calendar-container {
