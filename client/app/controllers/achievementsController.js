@@ -1,6 +1,7 @@
 // This controller is tied to achievements.html
 angular.module('achievements.controller', [])
-  .controller('AchievementsController', function ($scope, $window) {
+  .controller('AchievementsController', function ($scope, $window, Calendar,
+                                                  DummyRuns, RateGraph, Statistics) {
     var session = $window.localStorage;
     var medals = JSON.parse(session.achievements);
     $scope.total = medals['Gold'] + medals['Silver'] + medals['Bronze'] + medals['High Five'];
@@ -12,6 +13,12 @@ angular.module('achievements.controller', [])
       medals['Bronze'].toString(),
       medals['High Five'].toString()
     ];
+
+    window.addEventListener('resize', function() {
+      Calendar.createCalendar(DummyRuns.dummy());
+      RateGraph.createRateGraph(DummyRuns.dummy());
+    })
+
 
     // Animates display of medal counts
     $scope.incrementCounts = function (width) {
@@ -28,6 +35,10 @@ angular.module('achievements.controller', [])
       .duration(1500)
       .style('width', width + 'px');
     };
+
+    $scope.statistics = Statistics.generateStatistics(DummyRuns.dummy());
+    Calendar.createCalendar(DummyRuns.dummy());
+    RateGraph.createRateGraph(DummyRuns.dummy());
 
     setTimeout(function () {
       $scope.incrementCounts();
