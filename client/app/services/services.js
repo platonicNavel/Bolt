@@ -553,13 +553,14 @@ angular.module('bolt.services', [])
     }
 
     var containingWidth = d3.select('.rateGraph')[0][0].clientWidth;
-    var containingHeight = $('.recent-runs div').height();
+    var containingHeight = $('.recent-runs').height();
+    console.log(containingHeight);
 
     var margin = {
       top: 25,
       right:30,
-      bottom: 55,
-      left: 45,
+      bottom: 50,
+      left: 40,
     };
 
     var width = containingWidth - margin.left - margin.right;
