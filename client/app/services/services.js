@@ -328,7 +328,7 @@ angular.module('bolt.services', [])
 .factory('DummyRuns', function() {
   function dummy() {
     function Run(date) {
-      var distance = Math.random() * 5; //1 to 5 in miles per hour
+      var distance = Math.random() * 5 + 1; //1 to 5 in miles per hour
       var time = (distance / (Math.random() * 2 + 4)) * (60 * 60);
       var obj = {
         date: date,
@@ -402,6 +402,7 @@ angular.module('bolt.services', [])
     var containingWidth = d3.select('.calendar')[0][0].clientWidth;
     
     var dateScale = d3.scale.quantize().domain([0, 960]).range(visibleWeeks);
+
     var today = new Date();
     var numWeeks = dateScale(containingWidth)
     var yearAgo = new Date(today - 1000 * 60 * 60 * 24 * 7 * numWeeks);
@@ -414,11 +415,6 @@ angular.module('bolt.services', [])
     var width = containingWidth;
     var height = cellSize * 7;
     var colors = ['#c7e9c0','#a1d99b','#74c476','#31a354','#006d2c'];
-
-
-    // what if we base the number of days on the size of the window
-
-
 
     var percent = d3.format(".1%"),
         format = d3.time.format("%Y-%m-%d");
@@ -556,16 +552,20 @@ angular.module('bolt.services', [])
       rateGraph.removeChild(rateGraph.childNodes[0]);
     }
 
+    var containingWidth = d3.select('.rateGraph')[0][0].clientWidth;
+    var containingHeight = $('.recent-runs div').height();
+
     var margin = {
-      top: 20,
-      right:15,
-      bottom: 60,
-      left: 60,
+      top: 25,
+      right:30,
+      bottom: 55,
+      left: 45,
     };
 
-    var width = d3.select('.rateGraph')[0][0].clientWidth - margin.left - margin.right;
-    var height = d3.select('.rateGraph')[0][0].clientWidth * 0.5 - margin.top - margin.bottom;
-    var radius = d3.select('.rateGraph')[0][0].clientWidth * 0.012; 
+    var width = containingWidth - margin.left - margin.right;
+    var height = containingHeight - margin.top - margin.bottom;
+    var radius = containingWidth * 0.012;
+
 
     var x = d3.scale.linear()
       .domain([0, d3.max(data, function(d) { return d[0]; })])
