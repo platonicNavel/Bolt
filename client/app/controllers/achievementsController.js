@@ -16,6 +16,7 @@ angular.module('achievements.controller', [])
 
     window.addEventListener('resize', function() {
       Calendar.createCalendar(DummyRuns.dummy());
+      RateGraph.createRateGraph(DummyRuns.dummy());
     })
 
 

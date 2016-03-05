@@ -392,9 +392,12 @@ angular.module('bolt.services', [])
       return acc;
     }, {});
 
-    var marginTop = 10;
-    var width = d3.select('.calendar')[0][0].clientWidth;
-    var height = width * 0.132 - marginTop;
+
+    var containingWidth = d3.select('.calendar')[0][0].clientWidth;
+    var marginTop = containingWidth * 0.05;
+    var marginLeft = containingWidth * 0.05;
+    var width = containingWidth - marginLeft;
+    var height = containingWidth * 0.18 - marginTop;
     var cellSize = height / 8;
     var colors = ['#c7e9c0','#a1d99b','#74c476','#31a354','#006d2c'];
 
@@ -419,11 +422,11 @@ angular.module('bolt.services', [])
 
     var svg = d3.select(".calendar")
         .append("svg")
-        .attr("width", width)
+        .attr("width", (width + marginLeft))
         .attr("height", height + marginTop)
         .attr("class", "RdYlGn")
         .append("g")
-        .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height + marginTop - cellSize * 7) + ")");
+        .attr("transform", "translate(" + marginLeft + "," + marginTop+ ")");
 
     var rect = svg.selectAll(".day")
         .data(d3.time.days(yearAgo, today))
@@ -496,6 +499,11 @@ angular.module('bolt.services', [])
       return [run.actualTime / 60, run.distance];
     });
 
+    var rateGraph = document.getElementsByClassName('rateGraph')[0];
+    if (rateGraph.childNodes.length) {
+      rateGraph.removeChild(rateGraph.childNodes[0]);
+    }
+
     var margin = {
       top: 20,
       right:15,
@@ -503,8 +511,9 @@ angular.module('bolt.services', [])
       left: 60,
     };
 
-    var width = 600 - margin.left - margin.right;
-    var height = 300 - margin.top - margin.bottom;
+    var width = d3.select('.rateGraph')[0][0].clientWidth - margin.left - margin.right;
+    var height = d3.select('.rateGraph')[0][0].clientWidth * 0.5 - margin.top - margin.bottom;
+    var radius = d3.select('.rateGraph')[0][0].clientWidth * 0.012; 
 
     var x = d3.scale.linear()
       .domain([0, d3.max(data, function(d) { return d[0]; })])
@@ -528,7 +537,9 @@ angular.module('bolt.services', [])
 
     var xAxis = d3.svg.axis()
       .scale(x)
-      .orient('bottom');
+      .orient('bottom')
+      .ticks(8)
+      .outerTickSize(0);
 
     main.append('g')
       .attr('transform', 'translate(0,' + height + ')')
@@ -537,7 +548,9 @@ angular.module('bolt.services', [])
 
     var yAxis = d3.svg.axis()
       .scale(y)
-      .orient('left');
+      .orient('left')
+      .ticks(5)
+      .outerTickSize(0);
 
     main.append('g')
       .attr('transform', 'translate(0, 0)')
@@ -552,7 +565,7 @@ angular.module('bolt.services', [])
       .append('svg:circle')
         .attr('cx', function (d, i) { return x(d[0]); })
         .attr('cy', function (d, i) { return y(d[1]); })
-        .attr('r', 8)
+        .attr('r', radius)
         .style('fill', 'rgba(255, 0, 0, 0.3)');
 
   }

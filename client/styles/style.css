@@ -130,6 +130,7 @@ body{
 
 .medalContainerInner {
   height: 10vh;
+  text-align:center;
 }
 
 .icon {
@@ -137,7 +138,6 @@ body{
   position: relative;
   margin-top: 1%;
   height: 90%;
-  width: auto;
 }
 
 .number {
@@ -285,3 +285,20 @@ body{
   border-left: 1px solid black;
 }
 
+.axis line, .axis path {
+  shape-rendering: crispEdges;
+  stroke: black;
+  fill: none;
+}
+
+.summary-statistics {
+  height: 10vh;
+}
+
+.calendar-container {
+  height: 20vh;
+}
+
+.recent-runs {
+  height: 36vh;
+}
