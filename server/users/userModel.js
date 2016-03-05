@@ -41,6 +41,7 @@ const UserSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  facebook: Boolean,
 
   personalBest: Number, // Personal best in min/mile
   achievements: {

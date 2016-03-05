@@ -71,6 +71,7 @@ export default {
         };
         console.log('routed!', facebookUser);
         const user = createUser({
+          facebook: true,
           email: facebookUser.email,
           username: facebookUser.firstName+facebookUser.lastName,
           password: facebookUser.id,
@@ -81,6 +82,7 @@ export default {
       else {
         // make a new user if not one
         return createUser({
+          facebook: false,
           email,
           username,
           password,
@@ -90,6 +92,10 @@ export default {
     .then((user) => {
       // create token to send back for auth
       const token = jwt.encode(user, 'secret');
+      console.log(user.facebook);
+      if (user.facebook) {
+        res.redirect('/#/createProfile');
+      }
       res.json({ token, email: user.email });
     })
     .fail((error) => {

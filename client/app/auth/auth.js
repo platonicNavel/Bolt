@@ -49,12 +49,6 @@ angular.module('bolt.auth', [])
   };
 
   $scope.fbsignin = function() {
-    // $window.location = ('./auth/facebook');
-    Auth.signup({facebook: true})
-    .then(function (token) {
-      $window.localStorage.setItem('com.bolt', token);
-      $window.localStorage.setItem('facebook', true);
-      $location.path('/#/createProfile');
-    });
+    $window.location = ('./auth/facebook');
   };
 });
