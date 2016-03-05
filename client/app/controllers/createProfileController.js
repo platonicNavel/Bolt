@@ -18,6 +18,7 @@ angular.module('bolt.createProfile', ['bolt.auth'])
   $scope.createProfile = function (inputData) {
     $location.path('/profile');
     newData = {
+      username: $scope.session.username,
       firstName: $scope.session.firstName,
       lastName: $scope.session.lastName,
       email: $scope.session.email,
@@ -30,6 +31,7 @@ angular.module('bolt.createProfile', ['bolt.auth'])
     // possible.
 
     for (var key in inputData) {
+      console.log(inputData);
       if (inputData.hasOwnProperty(key) && inputData[key]) {
         newData[key] = inputData[key];
         $window.localStorage.setItem(key, inputData[key]);

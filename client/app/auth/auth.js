@@ -7,11 +7,11 @@ angular.module('bolt.auth', [])
     Auth.signin($scope.user)
       .then(function (session) {
         $window.localStorage.setItem('com.bolt', session.token);
-        $window.localStorage.setItem('username', session.username);
+        $window.localStorage.setItem('email', session.email);
         $window.localStorage.setItem('firstName', session.firstName);
         $window.localStorage.setItem('lastName', session.lastName);
         $window.localStorage.setItem('phone', session.phone);
-        $window.localStorage.setItem('email', session.email);
+        $window.localStorage.setItem('username', session.email);
         $window.localStorage.setItem('preferredDistance', session.preferredDistance);
         $window.localStorage.setItem('runs', session.runs);
         $window.localStorage.setItem('achievements', session.achievements);
@@ -20,8 +20,8 @@ angular.module('bolt.auth', [])
       .catch(function (error) {
         $scope.errorDetected = true;
         // This is a general error message, although there could be more failure
-        // cases other than the wrong username
-        $scope.signinError = "Hmm... we can't seem to find that username in our DB. Could it be another?";
+        // cases other than the wrong email
+        $scope.signinError = "Hmm... we can't seem to find that email in our DB. Could it be another?";
       });
   };
 
@@ -31,11 +31,11 @@ angular.module('bolt.auth', [])
     Auth.signup($scope.user)
       .then(function (session) {
         $window.localStorage.setItem('com.bolt', session.token);
-        $window.localStorage.setItem('username', session.username);
+        $window.localStorage.setItem('email', session.email);
         $window.localStorage.setItem('firstName', session.firstName);
         $window.localStorage.setItem('lastName', session.lastName);
         $window.localStorage.setItem('phone', session.phone);
-        $window.localStorage.setItem('email', session.email);
+        $window.localStorage.setItem('username', session.email);
         $window.localStorage.setItem('preferredDistance', session.preferredDistance);
         $window.localStorage.setItem('runs', session.runs);
         $window.localStorage.setItem('achievements', session.achievements);
@@ -44,7 +44,7 @@ angular.module('bolt.auth', [])
       .catch(function (error) {
         //Generic error handling (could be built out)
         $scope.errorDetected = true;
-        $scope.signupError = "Invalid username or password";
+        $scope.signupError = "Invalid email or password";
       });
   };
 

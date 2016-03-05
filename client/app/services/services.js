@@ -292,6 +292,7 @@ angular.module('bolt.services', [])
       data: user
     })
     .then(function (resp) {
+      console.log(resp.data)
       return resp.data;
     });
   };
@@ -299,17 +300,17 @@ angular.module('bolt.services', [])
   // Checks token and ensures leftover tokens without usernames don't fly
   var isAuth = function () {
     return (!!$window.localStorage.getItem('com.bolt'))
-        && (!!$window.localStorage.getItem('username') || !!$window.localStorage.getItem('facebook'));
+        && (!!$window.localStorage.getItem('email') || !!$window.localStorage.getItem('facebook'));
   };
 
   var signout = function () {
-    $window.localStorage.removeItem('username');
+    $window.localStorage.removeItem('email');
     $window.localStorage.removeItem('first');
     $window.localStorage.removeItem('last');
     $window.localStorage.removeItem('firstName');
     $window.localStorage.removeItem('lastName');
     $window.localStorage.removeItem('phone');
-    $window.localStorage.removeItem('email');
+    $window.localStorage.removeItem('username');
     $window.localStorage.removeItem('competitor');
     $window.localStorage.removeItem('preferredDistance');
     $window.localStorage.removeItem('runs');
