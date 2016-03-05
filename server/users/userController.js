@@ -12,11 +12,11 @@ export default {
 
   // Sign a user in
   signin(req, res, next) {
-    const username = req.body.username;
+    const email = req.body.email;
     const password = req.body.password;
 
     // see if they exist...
-    findUser({ username })
+    findUser({ email })
     .then((user) => {
       if (!user) {
         // ...if we can't find them, throw error
@@ -29,10 +29,10 @@ export default {
             const token = jwt.encode(user, 'secret');
             res.json({
               token,
-              username: user.username,
+              email: user.email,
               firstName: user.firstName,
               lastName: user.lastName,
-              email: user.email,
+              username: user.username,
               phone: user.phone,
               preferredDistance: user.preferredDistance,
               runs: JSON.stringify(user.runs),
@@ -50,17 +50,18 @@ export default {
   },
 
   signup(req, res, next) {
-    console.log('authenticating... hold on.', req.user);
-    const username = req.body.username;
+    console.log('authenticating... hold on.', req.user, req.body);
+    const email = req.body.email;
+    const username = req.body.email;
     const password = req.body.password;
 
     // check to see if user already exists
-    findUser({ username })
+    findUser({ email })
     .then((user) => {
       if (user) {
         next(new Error('User already exist!'));
       }
-      else if (req.user.facebook) {
+      else if (req.user) {
         const facebookUser = {
           facebook: true,
           firstName: req.user.name.givenName,
@@ -72,6 +73,7 @@ export default {
       else {
         // make a new user if not one
         return createUser({
+          email,
           username,
           password,
         });
@@ -80,7 +82,7 @@ export default {
     .then((user) => {
       // create token to send back for auth
       const token = jwt.encode(user, 'secret');
-      res.json({ token });
+      res.json({ token, email: user.email });
     })
     .fail((error) => {
       next(error);
@@ -90,6 +92,7 @@ export default {
   updateUser(req, res, next) {
     // This is tied to createProfile on the frontend, so users can update
     // their info
+    console.log(req.body);
     const newData = req.body.newInfo;
     const username = req.body.user.username;
     const user = {
@@ -117,7 +120,7 @@ export default {
       next(new Error('No token'));
     } else {
       const user = jwt.decode(token, 'secret');
-      findUser({ username: user.username })
+      findUser({ email: user.email })
       .then((user) => {
         res.json(user);
       })
@@ -138,7 +141,7 @@ export default {
       next(new Error('No token'));
     } else {
       const user = jwt.decode(token, 'secret');
-      findUser({ username: user.username })
+      findUser({ email: user.email })
       .then((foundUser) => {
         if (foundUser) {
           res.send(200);
