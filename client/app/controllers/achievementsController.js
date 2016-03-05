@@ -31,6 +31,6 @@ angular.module('achievements.controller', [])
 
     setTimeout(function () {
       $scope.incrementCounts();
-      }, 500);
+    }, 500);
 
   });
