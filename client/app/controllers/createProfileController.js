@@ -9,10 +9,18 @@ angular.module('bolt.createProfile', ['bolt.auth'])
 
   // Creates temporary FB authentication
   $scope.createFbToken = function() {
-    console.log($location.path());
     if ($window.localStorage.facebook) {
       var token = $location.path().split('=')[1];
+      $window.localStorage.removeItem('facebook');
       $window.localStorage.setItem('com.bolt', token);
+      Profile.getUser(function(user) {
+        console.log(user);
+        $scope.session.username = user.username;
+        $scope.session.firstName = user.firstName;
+        $scope.session.lastName = user.lastName;
+        $scope.session.email = user.email;
+        console.log('one', $scope.session);
+      }, true);
     }
   };
 

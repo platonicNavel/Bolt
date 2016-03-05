@@ -203,11 +203,14 @@ angular.module('bolt.services', [])
       });
     },
 
-    getUser : function () {
+    getUser : function (cb, prefill) {
       return $http({
         method: 'GET',
         url: '/api/users/profile'
       }).then(function (user) {
+        if (cb && prefill) {
+          cb(user.data);
+        }
         return user.data;
       });
     }
