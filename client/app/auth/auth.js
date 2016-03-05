@@ -29,9 +29,16 @@ angular.module('bolt.auth', [])
     // Sign the user up, and then get them to create a new Bolt profile at
     // '/createProfile'
     Auth.signup($scope.user)
-      .then(function (token) {
-        $window.localStorage.setItem('com.bolt', token);
-        $window.localStorage.setItem('username', $scope.user.username);
+      .then(function (session) {
+        $window.localStorage.setItem('com.bolt', session.token);
+        $window.localStorage.setItem('username', session.username);
+        $window.localStorage.setItem('firstName', session.firstName);
+        $window.localStorage.setItem('lastName', session.lastName);
+        $window.localStorage.setItem('phone', session.phone);
+        $window.localStorage.setItem('email', session.email);
+        $window.localStorage.setItem('preferredDistance', session.preferredDistance);
+        $window.localStorage.setItem('runs', session.runs);
+        $window.localStorage.setItem('achievements', session.achievements);
         $location.path('/createProfile');
       })
       .catch(function (error) {
