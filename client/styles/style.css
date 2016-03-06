@@ -288,6 +288,10 @@ body{
 }
 
 .summary {
+  margin-bottom: 10px;
+}
+
+.summary div {
   margin-bottom: 0;
 }
 
