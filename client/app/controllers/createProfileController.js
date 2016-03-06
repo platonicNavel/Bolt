@@ -15,10 +15,15 @@ angular.module('bolt.createProfile', ['bolt.auth'])
       $window.localStorage.setItem('com.bolt', token);
       Profile.getUser(function(user) {
         console.log(user);
+        $window.localStorage.setItem('preferredDistance', user.preferredDistance);
+        $window.localStorage.setItem('runs', user.runs);
+        $window.localStorage.setItem('achievements', JSON.stringify(user.achievements));
+
         $scope.session.username = user.username;
         $scope.session.firstName = user.firstName;
         $scope.session.lastName = user.lastName;
         $scope.session.email = user.email;
+
         console.log('one', $scope.session);
       }, true);
     }
