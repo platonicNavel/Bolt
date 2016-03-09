@@ -14,9 +14,12 @@ angular.module('achievements.controller', [])
       medals['High Five'].toString()
     ];
 
+    var debouncedCreateCalendar = _.debounce(Calendar.createCalendar, 200);
+    var debouncedCreateRateGraph = _.debounce(RateGraph.createRateGraph, 200);
+
     window.addEventListener('resize', function() {
-      Calendar.createCalendar(DummyRuns.dummy());
-      RateGraph.createRateGraph(DummyRuns.dummy());
+      debouncedCreateCalendar(DummyRuns.dummy());
+      debouncedCreateRateGraph(DummyRuns.dummy());
     })
 
 
@@ -37,6 +40,8 @@ angular.module('achievements.controller', [])
     };
 
     $scope.statistics = Statistics.generateStatistics(DummyRuns.dummy());
+
+
     Calendar.createCalendar(DummyRuns.dummy());
     RateGraph.createRateGraph(DummyRuns.dummy());
 
