@@ -51,17 +51,18 @@ export default {
 
   signup(req, res, next) {
     console.log('authenticating... hold on.', req.user, req.body);
-    const email = req.body.email;
+    const email = req.body.email || req.user.emails[0].value;
     const username = req.body.email;
     const password = req.body.password;
 
     // check to see if user already exists
     findUser({ email })
     .then((user) => {
-      if (user) {
+      if (user && !req.user) {
         next(new Error('User already exist!'));
-      }
-      else if (req.user) {
+      } else if (user) {
+        return user;
+      } else if (req.user) {
         const facebookUser = {
           facebook: true,
           firstName: req.user.name.givenName,
@@ -78,10 +79,8 @@ export default {
           firstName: facebookUser.firstName,
           lastName: facebookUser.lastName,
         });
-        // res.redirect('/#/createProfile');
         return user;
-      }
-      else {
+      } else {
         // make a new user if not one
         return createUser({
           facebook: false,
