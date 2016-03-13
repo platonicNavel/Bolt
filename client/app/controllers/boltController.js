@@ -1,6 +1,10 @@
 angular.module('bolt.controller', [])
 
 .controller('BoltController', function ($scope, $location, $window) {
+  if ($window.localStorage.facebook) {
+    $window.localStorage.removeItem('facebook');
+  }
+
   $scope.session = $window.localStorage;
   $scope.startRun = function () {
     // Check which radio button is selected

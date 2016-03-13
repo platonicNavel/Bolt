@@ -59,9 +59,11 @@ export default {
     findUser({ email })
     .then((user) => {
       if (user && !req.user) {
+        // if non-facebook login, throw error
         next(new Error('User already exist!'));
       } else if (user) {
-        return user;
+        // if facebook login, we can simply use that token
+        return { user, returning: true };
       } else if (req.user) {
         const facebookUser = {
           facebook: true,
@@ -79,36 +81,42 @@ export default {
           firstName: facebookUser.firstName,
           lastName: facebookUser.lastName,
         });
+        console.log(user)
         return user;
       } else {
         // make a new user if not one
-        return createUser({
+        const user = createUser({
           facebook: false,
           email,
           username,
           password,
         });
+        return user;
       }
     })
-    .then((user) => {
+    .then((data) => {
+      const returning = data.returning || false;
+      if (data.user) { data = data.user; }
       // create token to send back for auth
-      const token = jwt.encode(user, 'secret');
-      console.log(user.facebook);
-      if (user.facebook) {
+      const token = jwt.encode(data, 'secret');
+      console.log(data.facebook);
+      if (data.facebook && !returning) {
         res.redirect('/#/createProfile/token='+token);
         return;
-      }
-      else {
+      } else if (data.facebook && returning) {
+        res.redirect('/#/token='+token);
+        return;
+      } else {
         res.json({
-          token: token,
-          username: user.username,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          phone: user.phone,
-          preferredDistance: user.preferredDistance,
-          runs: JSON.stringify(user.runs),
-          achievements: JSON.stringify(user.achievements)
+          token,
+          username: data.username,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          preferredDistance: data.preferredDistance,
+          runs: JSON.stringify(data.runs),
+          achievements: JSON.stringify(data.achievements),
         });
       }
     })
