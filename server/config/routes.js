@@ -2,7 +2,6 @@ import userController from '../users/userController.js';
 import gameController from '../game/multiGameController';
 import passport from 'passport';
 import helpers from './helpers.js'; // our custom middleware
-import Promise from 'bluebird';
 import express from 'express';
 import fb from '../utils/facebook';
 

@@ -269,7 +269,7 @@ angular.module('bolt.services', [])
 })
 
 // Handle Authentication
-.factory('Auth', function ($http, $location, $window) {
+.factory('Auth', function ($http, $location, $window, Profile) {
   // it is responsible for authenticating our user
   // by exchanging the user's username and password
   // for a JWT from the server
@@ -300,6 +300,23 @@ angular.module('bolt.services', [])
     });
   };
 
+  var createFbToken = function(path, cb) {
+    if ($window.localStorage.facebook) {
+      console.log(path)
+      var token = path.split('=')[1];
+      $window.localStorage.removeItem('facebook');
+      $window.localStorage.setItem('com.bolt', token);
+      Profile.getUser(function(user) {
+        console.log(user);
+        $window.localStorage.setItem('preferredDistance', user.preferredDistance);
+        $window.localStorage.setItem('runs', user.runs);
+        $window.localStorage.setItem('achievements', JSON.stringify(user.achievements));
+
+        cb(user);
+      }, true);
+    }
+  };
+
   // Checks token and ensures leftover tokens without usernames don't fly
   var isAuth = function () {
     return ((!!$window.localStorage.getItem('com.bolt') && (!!$window.localStorage.getItem('email'))) || !!$window.localStorage.getItem('facebook'));
@@ -325,6 +342,7 @@ angular.module('bolt.services', [])
   return {
     signin: signin,
     signup: signup,
+    createFbToken: createFbToken,
     isAuth: isAuth,
     signout: signout
   };

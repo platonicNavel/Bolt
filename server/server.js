@@ -1,6 +1,5 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import Promise from 'bluebird';
 
 import middleware from './config/middleware.js';
 import routes from './config/routes.js';
@@ -17,9 +16,7 @@ const app = express();
 // Connect to mongolab database
 // Please replace this line with your own
 //  mongolab link
-// mongoose.connect('mongodb://heroku_l3g4r0kp:61docmam4tnk026c51bhc5hork@ds029605.mongolab.com:29605/heroku_l3g4r0kp');
-
-mongoose.connect('mongodb://127.0.0.1:27017');
+mongoose.connect('mongodb://heroku_l3g4r0kp:61docmam4tnk026c51bhc5hork@ds029605.mongolab.com:29605/heroku_l3g4r0kp');
 // ========================================
 
 middleware(app, express);

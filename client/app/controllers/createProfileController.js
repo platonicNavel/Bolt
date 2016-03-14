@@ -7,25 +7,16 @@ angular.module('bolt.createProfile', ['bolt.auth'])
   // will set the new data to $scope (so it's accessible to other controllers)
   // and update the user in our Mongo DB
 
-  // Creates temporary FB authentication
-  $scope.createFbToken = function() {
+  // checks for fb user to populate local storage
+  $scope.checkFb = function() {
     if ($window.localStorage.facebook) {
-      var token = $location.path().split('=')[1];
-      $window.localStorage.removeItem('facebook');
-      $window.localStorage.setItem('com.bolt', token);
-      Profile.getUser(function(user) {
-        console.log(user);
-        $window.localStorage.setItem('preferredDistance', user.preferredDistance);
-        $window.localStorage.setItem('runs', user.runs);
-        $window.localStorage.setItem('achievements', JSON.stringify(user.achievements));
-
+      var path = $location.path();
+      Auth.createFbToken(path, function(user) {
         $scope.session.username = user.username;
         $scope.session.firstName = user.firstName;
         $scope.session.lastName = user.lastName;
         $scope.session.email = user.email;
-
-        console.log('one', $scope.session);
-      }, true);
+      });
     }
   };
 
