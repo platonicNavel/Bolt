@@ -70,6 +70,18 @@ angular.module('bolt', [
       controller: 'CreateProfileController',
       authenticate: true
     })
+    .when('/createProfile/:token', {
+      // user creating/updating their profile info
+      templateUrl: 'app/views/createProfile.html',
+      controller: 'CreateProfileController',
+      authenticate: true
+    })
+    .when('/:token', {
+      // user creating/updating their profile info
+      templateUrl: 'app/views/bolt.html',
+      controller: 'BoltController',
+      authenticate: true
+    })
     .otherwise({
       redirectTo: '/'
     });

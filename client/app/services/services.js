@@ -203,11 +203,14 @@ angular.module('bolt.services', [])
       });
     },
 
-    getUser : function () {
+    getUser : function (cb, prefill) {
       return $http({
         method: 'GET',
         url: '/api/users/profile'
       }).then(function (user) {
+        if (cb && prefill) {
+          cb(user.data);
+        }
         return user.data;
       });
     }
@@ -266,7 +269,7 @@ angular.module('bolt.services', [])
 })
 
 // Handle Authentication
-.factory('Auth', function ($http, $location, $window) {
+.factory('Auth', function ($http, $location, $window, Profile) {
   // it is responsible for authenticating our user
   // by exchanging the user's username and password
   // for a JWT from the server
@@ -285,30 +288,48 @@ angular.module('bolt.services', [])
   };
 
   var signup = function (user) {
+    console.log(user);
     return $http({
       method: 'POST',
       url: '/api/users/signup',
       data: user
     })
     .then(function (resp) {
+      console.log(resp.data);
       return resp.data;
     });
   };
 
+  var createFbToken = function(path, cb) {
+    if ($window.localStorage.facebook) {
+      console.log(path)
+      var token = path.split('=')[1];
+      $window.localStorage.removeItem('facebook');
+      $window.localStorage.setItem('com.bolt', token);
+      Profile.getUser(function(user) {
+        console.log(user);
+        $window.localStorage.setItem('preferredDistance', user.preferredDistance);
+        $window.localStorage.setItem('runs', user.runs);
+        $window.localStorage.setItem('achievements', JSON.stringify(user.achievements));
+
+        cb(user);
+      }, true);
+    }
+  };
+
   // Checks token and ensures leftover tokens without usernames don't fly
   var isAuth = function () {
-    return (!!$window.localStorage.getItem('com.bolt'))
-        && (!!$window.localStorage.getItem('username'));
+    return ((!!$window.localStorage.getItem('com.bolt') && (!!$window.localStorage.getItem('email'))) || !!$window.localStorage.getItem('facebook'));
   };
 
   var signout = function () {
-    $window.localStorage.removeItem('username');
+    $window.localStorage.removeItem('email');
     $window.localStorage.removeItem('first');
     $window.localStorage.removeItem('last');
     $window.localStorage.removeItem('firstName');
     $window.localStorage.removeItem('lastName');
     $window.localStorage.removeItem('phone');
-    $window.localStorage.removeItem('email');
+    $window.localStorage.removeItem('username');
     $window.localStorage.removeItem('competitor');
     $window.localStorage.removeItem('preferredDistance');
     $window.localStorage.removeItem('runs');
@@ -321,6 +342,7 @@ angular.module('bolt.services', [])
   return {
     signin: signin,
     signup: signup,
+    createFbToken: createFbToken,
     isAuth: isAuth,
     signout: signout
   };

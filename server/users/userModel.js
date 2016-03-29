@@ -5,7 +5,7 @@ const SALT_WORK_FACTOR = 10;
 
 
 const UserSchema = new mongoose.Schema({
-  username: {
+  email: {
     type: String,
     required: true,
     unique: true,
@@ -23,7 +23,11 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: 'Gonzales',
   },
-  email: String,
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   phone: Number,
   preferredDistance: {
     type: Number,
@@ -37,6 +41,7 @@ const UserSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  facebook: Boolean,
 
   personalBest: Number, // Personal best in min/mile
   achievements: {

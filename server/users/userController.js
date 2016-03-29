@@ -12,11 +12,11 @@ export default {
 
   // Sign a user in
   signin(req, res, next) {
-    const username = req.body.username;
+    const email = req.body.email;
     const password = req.body.password;
 
     // see if they exist...
-    findUser({ username })
+    findUser({ email })
     .then((user) => {
       if (!user) {
         // ...if we can't find them, throw error
@@ -29,10 +29,10 @@ export default {
             const token = jwt.encode(user, 'secret');
             res.json({
               token,
-              username: user.username,
+              email: user.email,
               firstName: user.firstName,
               lastName: user.lastName,
-              email: user.email,
+              username: user.username,
               phone: user.phone,
               preferredDistance: user.preferredDistance,
               runs: JSON.stringify(user.runs),
@@ -50,36 +50,75 @@ export default {
   },
 
   signup(req, res, next) {
-    const username = req.body.username;
+    console.log('authenticating... hold on.', req.user, req.body);
+    const email = req.body.email || req.user.emails[0].value;
+    const username = req.body.email;
     const password = req.body.password;
 
     // check to see if user already exists
-    findUser({ username })
+    findUser({ email })
     .then((user) => {
-      if (user) {
+      if (user && !req.user) {
+        // if non-facebook login, throw error
         next(new Error('User already exist!'));
+      } else if (user) {
+        // if facebook login, we can simply use that token
+        return { user, returning: true };
+      } else if (req.user) {
+        const facebookUser = {
+          facebook: true,
+          firstName: req.user.name.givenName,
+          lastName: req.user.name.familyName,
+          email: req.user.emails[0].value,
+          id: req.user.id,
+        };
+        console.log('routed!', facebookUser);
+        const user = createUser({
+          facebook: true,
+          email: facebookUser.email,
+          username: facebookUser.firstName+facebookUser.lastName,
+          password: facebookUser.id,
+          firstName: facebookUser.firstName,
+          lastName: facebookUser.lastName,
+        });
+        console.log(user)
+        return user;
       } else {
         // make a new user if not one
-        return createUser({
+        const user = createUser({
+          facebook: false,
+          email,
           username,
           password,
         });
+        return user;
       }
     })
-    .then((user) => {
+    .then((data) => {
+      const returning = data.returning || false;
+      if (data.user) { data = data.user; }
       // create token to send back for auth
-      const token = jwt.encode(user, 'secret');
-      res.json({
-        token: token,
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phone: user.phone,
-        preferredDistance: user.preferredDistance,
-        runs: JSON.stringify(user.runs),
-        achievements: JSON.stringify(user.achievements)
-      });
+      const token = jwt.encode(data, 'secret');
+      console.log(data.facebook);
+      if (data.facebook && !returning) {
+        res.redirect('/#/createProfile/token='+token);
+        return;
+      } else if (data.facebook && returning) {
+        res.redirect('/#/token='+token);
+        return;
+      } else {
+        res.json({
+          token,
+          username: data.username,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          preferredDistance: data.preferredDistance,
+          runs: JSON.stringify(data.runs),
+          achievements: JSON.stringify(data.achievements),
+        });
+      }
     })
     .fail((error) => {
       next(error);
@@ -89,6 +128,7 @@ export default {
   updateUser(req, res, next) {
     // This is tied to createProfile on the frontend, so users can update
     // their info
+    console.log(req.body);
     const newData = req.body.newInfo;
     const username = req.body.user.username;
     const user = {
@@ -116,7 +156,7 @@ export default {
       next(new Error('No token'));
     } else {
       const user = jwt.decode(token, 'secret');
-      findUser({ username: user.username })
+      findUser({ email: user.email })
       .then((user) => {
         res.json(user);
       })
@@ -137,7 +177,7 @@ export default {
       next(new Error('No token'));
     } else {
       const user = jwt.decode(token, 'secret');
-      findUser({ username: user.username })
+      findUser({ email: user.email })
       .then((foundUser) => {
         if (foundUser) {
           res.send(200);

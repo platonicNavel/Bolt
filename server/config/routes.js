@@ -1,12 +1,19 @@
 import userController from '../users/userController.js';
 import gameController from '../game/multiGameController';
+import passport from 'passport';
 import helpers from './helpers.js'; // our custom middleware
+import express from 'express';
+import fb from '../utils/facebook';
 
 export default (app, express) => {
+  // auth via email
   app.get('/api/users/profile', userController.getUser);
   app.get('/api/users/signedin', userController.checkAuth);
 
   app.post('/api/games', gameController.makeGame);
+
+  app.get('/auth/facebook', fb.fbAuthRoute);
+  app.get('/auth/facebook/callback', fb.fbAuthCbRoute, userController.signup);
 
   // Route to obtain specified multiplayer game instance
   app.route('/api/games/:game_id')

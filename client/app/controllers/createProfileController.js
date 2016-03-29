@@ -6,9 +6,24 @@ angular.module('bolt.createProfile', ['bolt.auth'])
   // This will be the mechanism by which profiles are created / updated. It
   // will set the new data to $scope (so it's accessible to other controllers)
   // and update the user in our Mongo DB
+
+  // checks for fb user to populate local storage
+  $scope.checkFb = function() {
+    if ($window.localStorage.facebook) {
+      var path = $location.path();
+      Auth.createFbToken(path, function(user) {
+        $scope.session.username = user.username;
+        $scope.session.firstName = user.firstName;
+        $scope.session.lastName = user.lastName;
+        $scope.session.email = user.email;
+      });
+    }
+  };
+
   $scope.createProfile = function (inputData) {
     $location.path('/profile');
     newData = {
+      username: $scope.session.username,
       firstName: $scope.session.firstName,
       lastName: $scope.session.lastName,
       email: $scope.session.email,
@@ -21,6 +36,7 @@ angular.module('bolt.createProfile', ['bolt.auth'])
     // possible.
 
     for (var key in inputData) {
+      console.log(inputData);
       if (inputData.hasOwnProperty(key) && inputData[key]) {
         newData[key] = inputData[key];
         $window.localStorage.setItem(key, inputData[key]);
