@@ -5,9 +5,12 @@ Find running partners with the click of a button. Race yourself, race your frien
 
 ## Team
 
-  - __Product Owner__: Shane McGraw
-  - __Scrum Master__: Elliot Plant
-  - __Development Team Members__: Kyle Corbelli, Erick Paepke
+  - __Original Product Owner__: Shane McGraw
+  - __Product Owner__: Griffin Michl
+  - __Original Scrum Master__: Elliot Plant
+  - __Scrum Master__: Jarrett Gliner
+  - __Original Development Team Members__: Kyle Corbelli, Erick Paepke
+  - __Development Team Members__: Anthony Salierno, Jacob Lee
 
 ## Table of Contents
 
